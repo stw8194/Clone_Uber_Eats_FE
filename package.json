@@ -26,12 +26,12 @@
     "react-router-dom": "^5.3.4",
     "react-scripts": "^5.0.1",
     "tailwindcss": "^4.0.15",
-    "typescript": "^4.9.5",
     "vite": "^6.2.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "tailwind:build": "npx @tailwindcss/cli -i ./src/styles/tailwind.css -o ./src/styles/styles.css --watch",
+    "generate": "graphql-codegen --watch",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -56,6 +56,9 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.3.3"
+    "@graphql-codegen/cli": "^5.0.5",
+    "@parcel/watcher": "^2.5.1",
+    "@types/react-router-dom": "^5.3.3",
+    "typescript": "^5.8.2"
   }
 }
