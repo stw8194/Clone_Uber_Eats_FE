@@ -3,10 +3,11 @@ import { FormError } from "../components/form-error";
 import { useMutation } from "@apollo/client";
 import { graphql } from "../gql";
 import { LoginMutation, LoginMutationVariables } from "../gql/graphql";
+import { watch } from "fs";
 
 const LOGIN_MUTATION = graphql(`
-  mutation Login($email: String!, $password: String!) {
-    login(input: { email: $email, password: $password }) {
+  mutation Login($loginInput: LoginInput!) {
+    login(input: $loginInput) {
       ok
       token
       error
@@ -22,22 +23,36 @@ interface ILoginForm {
 export const Login = () => {
   const {
     register,
-    getValues,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<ILoginForm>();
-  const [loginMutation, { loading, error, data }] = useMutation<
+  const onCompleted = (data: LoginMutation) => {
+    const {
+      login: { ok, token },
+    } = data;
+    if (ok) {
+      console.log(token);
+    }
+  };
+  const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
     LoginMutation,
     LoginMutationVariables
-  >(LOGIN_MUTATION);
+  >(LOGIN_MUTATION, {
+    onCompleted,
+  });
   const onSubmit = () => {
-    const { email, password } = getValues();
-    loginMutation({
-      variables: {
-        email,
-        password,
-      },
-    });
+    if (!loading) {
+      const { email, password } = getValues();
+      loginMutation({
+        variables: {
+          loginInput: {
+            email,
+            password,
+          },
+        },
+      });
+    }
   };
 
   return (
@@ -60,7 +75,7 @@ export const Login = () => {
           <input
             {...register("password", {
               required: "Password is required",
-              minLength: 10,
+              minLength: 1,
             })}
             type="password"
             placeholder="Password"
@@ -72,7 +87,12 @@ export const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage="Password must be more than 10 chars." />
           )}
-          <button className="button mt-3">Log in</button>
+          <button className="button mt-3">
+            {loading ? "Loading..." : "Log in"}
+          </button>
+          {loginMutationResult?.login.error && (
+            <FormError errorMessage={loginMutationResult.login.error} />
+          )}
         </form>
       </div>
     </div>
