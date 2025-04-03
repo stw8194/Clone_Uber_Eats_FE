@@ -4,6 +4,8 @@ import { useMutation } from "@apollo/client";
 import { graphql } from "../gql";
 import logo from "../images/logo.svg";
 import { LoginMutation, LoginMutationVariables } from "../gql/graphql";
+import { Button } from "../components/button";
+import { Link } from "react-router-dom";
 
 const LOGIN_MUTATION = graphql(`
   mutation Login($loginInput: LoginInput!) {
@@ -25,7 +27,7 @@ export const Login = () => {
     register,
     handleSubmit,
     getValues,
-    formState: { errors },
+    formState: { isValid, errors },
   } = useForm<ILoginForm>();
   const onCompleted = (data: LoginMutation) => {
     const {
@@ -42,17 +44,15 @@ export const Login = () => {
     onCompleted,
   });
   const onSubmit = () => {
-    if (!loading) {
-      const { email, password } = getValues();
-      loginMutation({
-        variables: {
-          loginInput: {
-            email,
-            password,
-          },
+    const { email, password } = getValues();
+    loginMutation({
+      variables: {
+        loginInput: {
+          email,
+          password,
         },
-      });
-    }
+      },
+    });
   };
 
   return (
@@ -62,10 +62,17 @@ export const Login = () => {
         <h4 className="w-full text-left text-3xl mb-10">Welcome back</h4>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid gap-3 mt-5  w-full"
+          className="grid gap-3 mt-5  w-full mb-5"
         >
           <input
-            {...register("email", { required: "Email is required" })}
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value:
+                  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
+                message: "invalid email address",
+              },
+            })}
             type="email"
             placeholder="Email"
             className="input"
@@ -76,7 +83,7 @@ export const Login = () => {
           <input
             {...register("password", {
               required: "Password is required",
-              minLength: 1,
+              minLength: 10,
             })}
             type="password"
             placeholder="Password"
@@ -88,13 +95,17 @@ export const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage="Password must be more than 10 chars." />
           )}
-          <button className="button mt-3">
-            {loading ? "Loading..." : "Log in"}
-          </button>
+          <Button canClick={isValid} loading={loading} actionText="Log in" />
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
         </form>
+        <div>
+          New to Clone_uber?{" "}
+          <Link to="/create-account" className="text-lime-600 hover:underline">
+            Create an Account
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,3 @@
 .input {
   @apply p-3 border-2 text-lg focus:outline-none focus:border-gray-500 transition-colors font-light border-gray-200;
 }
-
-.button {
-  @apply py-4 px-5 text-lg font-medium text-white bg-lime-600 hover:bg-lime-800 transition-colors;
-}
