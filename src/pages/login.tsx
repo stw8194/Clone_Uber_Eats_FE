@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import Helmet from "react-helmet";
 import { FormError } from "../components/form-error";
 import { useMutation } from "@apollo/client";
 import { graphql } from "../gql";
@@ -6,6 +7,7 @@ import logo from "../images/logo.svg";
 import { LoginMutation, LoginMutationVariables } from "../gql/graphql";
 import { Button } from "../components/button";
 import { Link } from "react-router-dom";
+import { isLoggedInVar } from "../apollo";
 
 const LOGIN_MUTATION = graphql(`
   mutation Login($loginInput: LoginInput!) {
@@ -28,13 +30,14 @@ export const Login = () => {
     handleSubmit,
     getValues,
     formState: { isValid, errors },
-  } = useForm<ILoginForm>();
+  } = useForm<ILoginForm>({ mode: "onChange" });
   const onCompleted = (data: LoginMutation) => {
     const {
       login: { ok, token },
     } = data;
     if (ok) {
       console.log(token);
+      isLoggedInVar(true);
     }
   };
   const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
@@ -44,19 +47,24 @@ export const Login = () => {
     onCompleted,
   });
   const onSubmit = () => {
-    const { email, password } = getValues();
-    loginMutation({
-      variables: {
-        loginInput: {
-          email,
-          password,
+    if (!loading) {
+      const { email, password } = getValues();
+      loginMutation({
+        variables: {
+          loginInput: {
+            email,
+            password,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+      <Helmet>
+        <title>Login | CUber Eats</title>
+      </Helmet>
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
         <img src={logo} alt="" className="w-52 mb-5" />
         <h4 className="w-full text-left text-3xl mb-10">Welcome back</h4>
@@ -67,11 +75,8 @@ export const Login = () => {
           <input
             {...register("email", {
               required: "Email is required",
-              pattern: {
-                value:
-                  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
-                message: "invalid email address",
-              },
+              pattern:
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             })}
             type="email"
             placeholder="Email"
@@ -79,6 +84,9 @@ export const Login = () => {
           />
           {errors.email?.message && (
             <FormError errorMessage={errors.email.message} />
+          )}
+          {errors.email?.type === "pattern" && (
+            <FormError errorMessage={"invalid email address"} />
           )}
           <input
             {...register("password", {
@@ -101,7 +109,7 @@ export const Login = () => {
           )}
         </form>
         <div>
-          New to Clone_uber?{" "}
+          New to CUber?{" "}
           <Link to="/create-account" className="text-lime-600 hover:underline">
             Create an Account
           </Link>

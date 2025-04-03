@@ -179,6 +179,9 @@
   }
 }
 @layer utilities {
+  .pointer-events-none {
+    pointer-events: none;
+  }
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
   }
