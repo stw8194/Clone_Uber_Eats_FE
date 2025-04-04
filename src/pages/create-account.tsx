@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { FormError } from "../components/form-error";
 import { useMutation } from "@apollo/client";
 import { graphql } from "../gql";
@@ -45,7 +45,7 @@ export const CreateAccount = () => {
       createAccount: { ok },
     } = data;
     if (ok) {
-      history.push("/login");
+      history.push("/");
     }
   };
   const [
@@ -139,7 +139,7 @@ export const CreateAccount = () => {
         </form>
         <div>
           Already use CUber?{" "}
-          <Link to="/login" className="text-lime-600 hover:underline">
+          <Link to="/" className="text-lime-600 hover:underline">
             Sign in
           </Link>
         </div>
