@@ -1,7 +1,3 @@
-import { useQuery } from "@apollo/client";
-import { isLoggedInVar } from "../apollo";
-import { graphql } from "../gql";
-import { MeQuery } from "../gql/graphql";
 import {
   Redirect,
   Route,
@@ -9,6 +5,8 @@ import {
   Switch,
 } from "react-router-dom";
 import { Restaurants } from "../pages/client/restaurant";
+import { Header } from "../components/header";
+import { useMe } from "../hooks/useMe";
 
 const ClientRoutes = [
   <Route path="/" exact>
@@ -16,22 +14,8 @@ const ClientRoutes = [
   </Route>,
 ];
 
-const ME_QUERY = graphql(`
-  query Me {
-    me {
-      id
-      email
-      role
-      verified
-    }
-  }
-`);
-
 export const LoggedInRouter = () => {
-  const onClick = () => {
-    isLoggedInVar(false);
-  };
-  const { data, loading, error } = useQuery<MeQuery>(ME_QUERY);
+  const { data, loading, error } = useMe();
   if (!data || loading || error) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -41,6 +25,7 @@ export const LoggedInRouter = () => {
   }
   return (
     <Router>
+      <Header />
       <Switch>
         {data.me.role === "Client" && ClientRoutes}
         <Redirect to="/" />
