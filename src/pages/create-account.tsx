@@ -69,7 +69,6 @@ export const CreateAccount = () => {
           },
         },
       });
-      console.log(createAccountMutationResult);
     }
   };
 
@@ -81,10 +80,7 @@ export const CreateAccount = () => {
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
         <img src={logo} alt="" className="w-52 mb-5" />
         <h4 className="w-full text-left text-3xl mb-10">Let's get started</h4>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="grid gap-3 mt-5  w-full mb-5"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="form">
           <input
             {...register("email", {
               required: "Email is required",

@@ -35,7 +35,6 @@
     --font-weight-light: 300;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
-    --font-weight-bold: 700;
     --tracking-wide: 0.025em;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -412,6 +411,13 @@
     --tw-outline-style: none;
     outline-style: none;
   }
+}
+.form {
+  margin-top: calc(var(--spacing) * 5);
+  margin-bottom: calc(var(--spacing) * 5);
+  display: grid;
+  width: 100%;
+  gap: calc(var(--spacing) * 3);
 }
 @property --tw-border-style {
   syntax: "*";
