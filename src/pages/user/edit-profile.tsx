@@ -26,11 +26,13 @@ const EDIT_PROFILE_MUTATION = graphql(`
 
 export const EditProfile = () => {
   const { data: userData } = useMe();
+  const client = useApolloClient();
+  const history = useHistory();
   const {
     register,
     handleSubmit,
     getValues,
-    formState: { isValid, errors },
+    formState: { isValid },
   } = useForm<IEditProfileForm>({
     mode: "onChange",
     defaultValues: {
@@ -38,27 +40,31 @@ export const EditProfile = () => {
     },
   });
 
-  const client = useApolloClient();
-  const history = useHistory();
   const onCompleted = (data: EditProfileMutation) => {
     const {
       editProfile: { ok },
     } = data;
     const { email, password } = getValues();
-    if (ok && userData?.me.id) {
-      // client.writeFragment({
-      //   id: `User:${userData.me.id}`,
-      //   fragment: gql`
-      //     fragment EditedUser on User {
-      //       email
-      //       password
-      //     }
-      //   `,
-      //   data: {
-      //     email,
-      //     password,
-      //   },
-      // });
+    if (ok && userData) {
+      const {
+        me: { email: prevEmail, id },
+      } = userData;
+      const { email: newEmail } = getValues();
+      if (prevEmail !== newEmail) {
+        client.writeFragment({
+          id: `User:${id}`,
+          fragment: gql`
+            fragment EditedUser on User {
+              verified
+              email
+            }
+          `,
+          data: {
+            verified: false,
+            email: newEmail,
+          },
+        });
+      }
       history.push("/");
     }
   };
@@ -72,7 +78,6 @@ export const EditProfile = () => {
 
   const onSubmit = () => {
     const { email, password } = getValues();
-    console.log(getValues());
     editProfileMutaion({
       variables: {
         editProfileInput: {
