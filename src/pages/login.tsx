@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { Helmet } from "react-helmet-async";
 import { FormError } from "../components/form-error";
 import { useMutation } from "@apollo/client";
 import { graphql } from "../gql";
@@ -64,9 +63,9 @@ export const Login = () => {
 
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
-      <Helmet>
+      <head>
         <title>Login | CUber Eats</title>
-      </Helmet>
+      </head>
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
         <img src={logo} alt="" className="w-52 mb-5" />
         <h4 className="w-full text-left text-3xl mb-10">Welcome back</h4>
