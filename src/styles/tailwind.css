@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.input {
+  @apply p-3 border-2 text-lg focus:outline-none focus:border-gray-500 transition-colors font-light border-gray-200;
+}
+
+.form {
+  @apply grid gap-3 mt-5 w-full mb-5;
+}
