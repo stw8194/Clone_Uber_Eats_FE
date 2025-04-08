@@ -73,9 +73,7 @@ export const CreateAccount = () => {
 
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
-      <head>
-        <title>Create Account | CUber Eats</title>
-      </head>
+      <title>Create Account | CUber Eats</title>
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
         <img src={logo} alt="" className="w-52 mb-5" />
         <h4 className="w-full text-left text-3xl mb-10">Let's get started</h4>
