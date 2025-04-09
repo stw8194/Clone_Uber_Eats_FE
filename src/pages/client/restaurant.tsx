@@ -4,6 +4,9 @@ import {
   RestaurantsPageQuery,
   RestaurantsPageQueryVariables,
 } from "../../gql/graphql";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { Restaurant } from "../../components/restaurant";
 
 const RESTAURANTS_QUERY = graphql(`
   query RestaurantsPage($restaurantsInput: RestaurantsInput!) {
@@ -75,15 +78,10 @@ export const Restaurants = () => {
           </div>
           <div className="grid mt-10 grid-cols-4 gap-x-4 gap-y-8">
             {data?.restaurants.results?.map((restaurant) => (
-              <div>
-                <div
-                  className="bg-cover bg-center mb-2 rounded-xl py-16"
-                  style={{ backgroundImage: `url(${restaurant.coverImg})` }}
-                ></div>
-                <h3 className="text-xl font-medium cursor-pointer">
-                  {restaurant.name}
-                </h3>
-              </div>
+              <Restaurant
+                coverImg={restaurant.coverImg}
+                name={restaurant.name}
+              />
             ))}
           </div>
         </div>
