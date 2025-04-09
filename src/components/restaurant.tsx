@@ -2,6 +2,7 @@ import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface IRestaurantProps {
+  id: string;
   coverImg: string;
   name: string;
 }
