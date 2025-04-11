@@ -8,7 +8,7 @@ import {
   CreateAccountMutationVariables,
   UserRole,
 } from "../gql/graphql";
-import { Button } from "../components/button";
+import { SubmitButton } from "../components/submit-button";
 import { Link, useHistory } from "react-router-dom";
 
 const CREATE_ACCOUNT_MUTATION = graphql(`
@@ -119,7 +119,7 @@ export const CreateAccount = () => {
               <option key={index}>{role}</option>
             ))}
           </select>
-          <Button
+          <SubmitButton
             canClick={isValid}
             loading={loading}
             actionText="Create Account"

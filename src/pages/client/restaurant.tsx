@@ -7,7 +7,8 @@ import {
 import { useState } from "react";
 import { Restaurant } from "../../components/restaurant";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { ShowMoreButton } from "../../components/showmore-button";
 
 interface ISearchForm {
   searchTerm: string;
@@ -53,6 +54,9 @@ export const Restaurants = () => {
     []
   );
   const [page, setPage] = useState(1);
+  const onClick = () => {
+    setPage((current) => current + 1);
+  };
 
   const onCompleted = (data: RestaurantsPageQuery) => {
     const {
@@ -76,9 +80,6 @@ export const Restaurants = () => {
     onCompleted,
   });
 
-  const onClick = () => {
-    setPage((current) => current + 1);
-  };
   const { register, handleSubmit, getValues } = useForm<ISearchForm>();
   const history = useHistory();
   const onSearchSubmit = () => {
@@ -108,22 +109,23 @@ export const Restaurants = () => {
           <div className="flex justify-around max-w-sm mx-auto">
             {restaurantsQueryResults?.allCategories.categories?.map(
               (category) => (
-                <div
-                  key={category.id}
-                  className="flex flex-col group items-center cursor-pointer"
-                >
+                <Link to={`/category/${category.slug}`}>
                   <div
-                    className="w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
-                    style={{ backgroundImage: `url(${category.coverImg})` }}
-                  ></div>
-                  <span className="mt-1 text-sm font-medium">
-                    {category.name}
-                  </span>
-                </div>
+                    key={category.id}
+                    className="flex flex-col group items-center cursor-pointer"
+                  >
+                    <div
+                      className="w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
+                      style={{ backgroundImage: `url(${category.coverImg})` }}
+                    ></div>
+                    <span className="mt-1 text-sm font-medium">
+                      {category.name}
+                    </span>
+                  </div>
+                </Link>
               )
             )}
           </div>
-
           <div className="grid mt-10 md:grid-cols-4 gap-x-4 gap-y-8">
             {allRestaurants.map((restaurant) => (
               <Restaurant
@@ -134,17 +136,13 @@ export const Restaurants = () => {
               />
             ))}
           </div>
-
           <div className="flex justify-center items-center mt-16">
-            {page !== restaurantsQueryResults?.restaurants.totalPages && (
-              <button
-                className={
-                  "inline-flex items-center justify-center my-3 py-3 px-4 text-lg font-semibold focus:outline-none rounded-lg text-white transition-colors bg-black hover:bg-gray-900"
-                }
+            {restaurantsQueryResults?.restaurants.totalPages && (
+              <ShowMoreButton
+                page={page}
+                totalPages={restaurantsQueryResults.restaurants.totalPages}
                 onClick={onClick}
-              >
-                Show more
-              </button>
+              />
             )}
             {loading && (
               <div className="flex justify-center mt-4 text-gray-500">

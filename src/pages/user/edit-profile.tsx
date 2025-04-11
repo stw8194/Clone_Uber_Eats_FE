@@ -7,7 +7,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useMe } from "../../hooks/useMe";
-import { Button } from "../../components/button";
+import { SubmitButton } from "../../components/submit-button";
 
 interface IEditProfileForm {
   email?: string;
@@ -110,7 +110,7 @@ export const EditProfile = () => {
             placeholder="Password"
             className="input"
           />
-          <Button
+          <SubmitButton
             canClick={isValid}
             loading={loading}
             actionText="Update Profile"

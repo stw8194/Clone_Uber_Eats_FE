@@ -4,7 +4,7 @@ interface IButtonProps {
   actionText: string;
 }
 
-export const Button: React.FC<IButtonProps> = ({
+export const SubmitButton: React.FC<IButtonProps> = ({
   canClick,
   loading,
   actionText,

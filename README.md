@@ -15,4 +15,4 @@
 ## etc.
 
 - Code Cleanup on pages
-- Converting repetitive graphql request code to fragments
+- Converting repetitive graphql request code to fragments(RESTAURANT, CATEGORY)
