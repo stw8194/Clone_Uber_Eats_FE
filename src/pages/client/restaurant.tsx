@@ -108,11 +108,8 @@ export const Restaurants = () => {
           <div className="flex justify-around max-w-sm mx-auto">
             {restaurantsQueryResults?.allCategories.categories?.map(
               (category) => (
-                <Link to={`/category/${category.slug}`}>
-                  <div
-                    key={category.id}
-                    className="flex flex-col group items-center cursor-pointer"
-                  >
+                <Link key={category.id} to={`/category/${category.slug}`}>
+                  <div className="flex flex-col group items-center cursor-pointer">
                     <div
                       className="w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
                       style={{ backgroundImage: `url(${category.coverImg})` }}
