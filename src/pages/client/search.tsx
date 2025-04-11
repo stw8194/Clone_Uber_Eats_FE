@@ -39,6 +39,7 @@ export const Search = () => {
     []
   );
   const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
   const onClick = () => {
     setPage((current) => current + 1);
   };
@@ -59,6 +60,7 @@ export const Search = () => {
     );
   useEffect(() => {
     const [_, searchTerm] = location.search.split("?term=");
+    setQuery(searchTerm);
     if (!searchTerm) {
       return history.replace("/");
     }
@@ -66,7 +68,6 @@ export const Search = () => {
       variables: {
         searchRestaurantInput: {
           page,
-          limit: 2,
           query: searchTerm,
         },
       },
@@ -74,8 +75,9 @@ export const Search = () => {
     });
   }, [history, location, page, searchRestaurantQuery]);
   return (
-    <div>
+    <div className="max-w-screen-xl pb-20 mx-auto mt-8">
       <title>Search | CUber Eats</title>
+      <div className="px-16 text-xl font-semibold">{`${searchRestaurantQueryResults?.searchRestaurant.totalResults} results for "${query}"`}</div>
       <div className="grid mt-10 md:grid-cols-4 gap-x-4 gap-y-8">
         {allRestaurants.map((restaurant) => (
           <Restaurant

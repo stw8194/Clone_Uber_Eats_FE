@@ -1,6 +1,5 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ShowMoreButton } from "./showmore-button";
 
 interface IRestaurantProps {
   id: string;

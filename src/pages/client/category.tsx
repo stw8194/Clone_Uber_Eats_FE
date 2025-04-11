@@ -66,7 +66,6 @@ export const Category = () => {
     variables: {
       categoryInput: {
         page,
-        limit: 2,
         slug,
       },
     },
@@ -74,8 +73,19 @@ export const Category = () => {
   });
 
   return (
-    <div>
+    <div className="max-w-screen-xl pb-20 mx-auto mt-8">
       <title>Category | CUber Eats</title>
+      <div className="flex items-center justify-between w-full mx-auto px-16">
+        <div className="mt-1 mr-96 text-6xl font-bold whitespace-nowrap">
+          {categoryQueryResults?.category.category?.name}
+        </div>
+        <div
+          className="w-32 h-32 ml-80 bg-cover rounded-full"
+          style={{
+            backgroundImage: `url(${categoryQueryResults?.category.category?.coverImg})`,
+          }}
+        ></div>
+      </div>
       <div className="grid mt-10 md:grid-cols-4 gap-x-4 gap-y-8">
         {allRestaurants.map((restaurant) => (
           <Restaurant

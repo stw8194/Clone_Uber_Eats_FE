@@ -74,7 +74,6 @@ export const Restaurants = () => {
     variables: {
       restaurantsInput: {
         page,
-        limit: 2,
       },
     },
     onCompleted,
