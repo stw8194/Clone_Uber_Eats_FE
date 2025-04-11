@@ -6,6 +6,12 @@ import {
 } from "../../gql/graphql";
 import { useState } from "react";
 import { Restaurant } from "../../components/restaurant";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+
+interface ISearchForm {
+  searchTerm: string;
+}
 
 const RESTAURANTS_QUERY = graphql(`
   query RestaurantsPage($restaurantsInput: RestaurantsInput!) {
@@ -57,7 +63,7 @@ export const Restaurants = () => {
     }
   };
 
-  const { data, loading } = useQuery<
+  const { data: restaurantsQueryResults, loading } = useQuery<
     RestaurantsPageQuery,
     RestaurantsPageQueryVariables
   >(RESTAURANTS_QUERY, {
@@ -73,63 +79,81 @@ export const Restaurants = () => {
   const onClick = () => {
     setPage((current) => current + 1);
   };
+  const { register, handleSubmit, getValues } = useForm<ISearchForm>();
+  const history = useHistory();
+  const onSearchSubmit = () => {
+    const { searchTerm } = getValues();
+    history.push({
+      pathname: "/search",
+      search: `term=${searchTerm}`,
+    });
+  };
 
   return (
     <div>
-      <form className="bg-gray-800 w-full py-40 flex items-center justify-center">
+      <title>Home | CUber Eats</title>
+      <form
+        onSubmit={handleSubmit(onSearchSubmit)}
+        className="bg-gray-800 w-full py-40 flex items-center justify-center"
+      >
         <input
+          {...register("searchTerm", { required: true, min: 2 })}
           type="Search"
-          className="input rounded-md border-0 bg-white w-1/4"
+          className="input rounded-md border-0 bg-white w-3/4 md:w-1/4"
           placeholder="Search restaurants..."
         />
       </form>
-      <div className="max-w-screen-xl pb-20 mx-auto mt-8">
-        <div className="flex justify-around max-w-sm mx-auto">
-          {data?.allCategories.categories?.map((category) => (
-            <div
-              key={category.id}
-              className="flex flex-col group items-center cursor-pointer"
-            >
-              <div
-                className="w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
-                style={{ backgroundImage: `url(${category.coverImg})` }}
-              ></div>
-              <span className="mt-1 text-sm font-medium">{category.name}</span>
-            </div>
-          ))}
-        </div>
+      {allRestaurants && (
+        <div className="max-w-screen-xl pb-20 mx-auto mt-8">
+          <div className="flex justify-around max-w-sm mx-auto">
+            {restaurantsQueryResults?.allCategories.categories?.map(
+              (category) => (
+                <div
+                  key={category.id}
+                  className="flex flex-col group items-center cursor-pointer"
+                >
+                  <div
+                    className="w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
+                    style={{ backgroundImage: `url(${category.coverImg})` }}
+                  ></div>
+                  <span className="mt-1 text-sm font-medium">
+                    {category.name}
+                  </span>
+                </div>
+              )
+            )}
+          </div>
 
-        <div className="grid mt-10 grid-cols-4 gap-x-4 gap-y-8">
-          {allRestaurants.map((restaurant) => (
-            <Restaurant
-              key={restaurant.id}
-              id={restaurant.id + ""}
-              coverImg={restaurant.coverImg}
-              name={restaurant.name}
-            />
-          ))}
-        </div>
+          <div className="grid mt-10 md:grid-cols-4 gap-x-4 gap-y-8">
+            {allRestaurants.map((restaurant) => (
+              <Restaurant
+                key={restaurant.id}
+                id={restaurant.id + ""}
+                coverImg={restaurant.coverImg}
+                name={restaurant.name}
+              />
+            ))}
+          </div>
 
-        <div className="flex justify-center items-center mt-16">
-          {page !== data?.restaurants.totalPages && (
-            <button
-              className={`inline-flex items-center justify-center my-3 py-3 px-4 text-lg font-semibold focus:outline-none rounded-lg text-white transition-colors ${
-                data?.restaurants.totalPages !== allRestaurants.length
-                  ? "bg-black hover:bg-gray-900"
-                  : "bg-gray-300 pointer-events-none"
-              }`}
-              onClick={onClick}
-            >
-              Show more
-            </button>
-          )}
-          {loading && (
-            <div className="flex justify-center mt-4 text-gray-500">
-              Loading...
-            </div>
-          )}
+          <div className="flex justify-center items-center mt-16">
+            {page !== restaurantsQueryResults?.restaurants.totalPages && (
+              <button
+                className={
+                  "inline-flex items-center justify-center my-3 py-3 px-4 text-lg font-semibold focus:outline-none rounded-lg text-white transition-colors bg-black hover:bg-gray-900"
+                }
+                onClick={onClick}
+              >
+                Show more
+              </button>
+            )}
+            {loading && (
+              <div className="flex justify-center mt-4 text-gray-500">
+                Loading...
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
