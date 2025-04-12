@@ -7,7 +7,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useMe } from "../../hooks/useMe";
-import { Button } from "../../components/button";
+import { SubmitButton } from "../../components/submit-button";
 
 interface IEditProfileForm {
   email?: string;
@@ -89,9 +89,7 @@ export const EditProfile = () => {
 
   return (
     <div className="mt-52 flex flex-col justify-center items-center">
-      <head>
-        <title>Edit Profile | CUber Eats</title>
-      </head>
+      <title>Edit Profile | CUber Eats</title>
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
         <h4 className="font-semibold text-2xl mb-3">Edit Profile</h4>
         <form onSubmit={handleSubmit(onSubmit)} className="form">
@@ -112,7 +110,7 @@ export const EditProfile = () => {
             placeholder="Password"
             className="input"
           />
-          <Button
+          <SubmitButton
             canClick={isValid}
             loading={loading}
             actionText="Update Profile"

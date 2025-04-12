@@ -58,9 +58,7 @@ export const ConfirmEmail = () => {
   }, []);
   return (
     <div className="mt-52 flex flex-col items-center justify-center">
-      <head>
-        <title>Verify Email | CUber Eats</title>
-      </head>
+      <title>Verify Email | CUber Eats</title>
       <h2 className="text-lg mb-1 font-medium">Confirming email...</h2>
       <h4 className="text-gray-700 text-sm">
         Please wait, don't close this page...

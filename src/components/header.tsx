@@ -13,10 +13,10 @@ export const Header: React.FC = () => {
           <span>Please verify your email.</span>
         </div>
       )}
-      <header className="py-4">
-        <div className="w-full px-5 xl:px-0 max-w-screen-xl mx-auto flex justify-between items-center">
+      <header className="py-6">
+        <div className="w-full px-5 mb-6 xl:px-0 max-w-screen-xl mx-auto flex justify-between items-center">
           <Link to="/">
-            <img src={logo} alt="Cuber Eats" className="w-36" />
+            <img src={logo} alt="Cuber Eats" className="w-24" />
           </Link>
           <span className="text-xs">
             <Link to="/edit-profile">

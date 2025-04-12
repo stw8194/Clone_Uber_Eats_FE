@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { graphql } from "../gql";
 import logo from "../images/logo.svg";
 import { LoginMutation, LoginMutationVariables } from "../gql/graphql";
-import { Button } from "../components/button";
+import { SubmitButton } from "../components/submit-button";
 import { Link } from "react-router-dom";
 import { authTokenVar, isLoggedInVar } from "../apollo";
 import { LOCALSTORAGE_TOKEN } from "../constants";
@@ -63,9 +63,7 @@ export const Login = () => {
 
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
-      <head>
-        <title>Login | CUber Eats</title>
-      </head>
+      <title>Login | CUber Eats</title>
       <div className="w-full max-w-screen-sm flex flex-col px-5 items-center">
         <img src={logo} alt="" className="w-52 mb-5" />
         <h4 className="w-full text-left text-3xl mb-10">Welcome back</h4>
@@ -104,7 +102,11 @@ export const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage="Password must be more than 10 chars." />
           )}
-          <Button canClick={isValid} loading={loading} actionText="Log in" />
+          <SubmitButton
+            canClick={isValid}
+            loading={loading}
+            actionText="Log in"
+          />
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
