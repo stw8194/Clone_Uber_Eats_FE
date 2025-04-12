@@ -39,6 +39,7 @@
     "start": "npm run codegen:generate && npm run tailwind:build && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:cov": "npm test -- --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -64,5 +65,12 @@
     "@parcel/watcher": "^2.5.1",
     "@types/react-router-dom": "^5.3.3",
     "typescript": "^5.8.2"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "./src/components/**/*.tsx",
+      "./src/pages/**/*.tsx",
+      "./src/routers/**/*.tsx"
+    ]
   }
 }
