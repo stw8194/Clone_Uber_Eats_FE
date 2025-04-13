@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { SubmitButton } from "../submit-button";
 
-describe("SubmitButton", () => {
+describe("<SubmitButton />", () => {
   it("should render OK with props", () => {
     render(<SubmitButton canClick={true} loading={false} actionText="test" />);
     expect(screen.getByText("test")).toBeInTheDocument();

@@ -3,7 +3,7 @@ import { ShowMoreButton } from "../showmore-button";
 
 const onClick = jest.fn();
 
-describe("ShowMoreButton", () => {
+describe("<ShowMoreButton />", () => {
   it("should render OK with props", () => {
     render(<ShowMoreButton page={1} totalPages={2} onClick={onClick} />);
     expect(screen.getByText("Show more")).toBeInTheDocument();

@@ -14,7 +14,7 @@ jest.mock("../../routers/logged-in-router", () => {
   };
 });
 
-describe("App", () => {
+describe("<App/ >", () => {
   it("should render LoggedOutRouter", () => {
     render(<App />);
     expect(screen.getByText("logged-out")).toBeInTheDocument();
