@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { NotFound } from "../404";
 import { BrowserRouter as Router } from "react-router-dom";
 
