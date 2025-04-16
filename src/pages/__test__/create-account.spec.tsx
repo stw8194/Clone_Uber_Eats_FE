@@ -94,6 +94,7 @@ describe("<CreateAccount />", () => {
       CREATE_ACCOUNT_MUTATION,
       mockedMutationResponse
     );
+    jest.spyOn(window, "alert").mockImplementation(() => null);
     userEvent.type(email, formData.email);
     userEvent.type(password, formData.password);
     userEvent.click(submitBtn);
@@ -104,5 +105,6 @@ describe("<CreateAccount />", () => {
     expect(mockedMutationResponse).toHaveBeenCalledWith({
       createAccountInput: { ...formData },
     });
+    expect(window.alert).toHaveBeenCalledWith("Account created");
   });
 });

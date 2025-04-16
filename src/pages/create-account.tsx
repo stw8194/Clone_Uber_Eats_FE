@@ -44,6 +44,7 @@ export const CreateAccount = () => {
       createAccount: { ok },
     } = data;
     if (ok) {
+      alert("Account created");
       history.push("/");
     }
   };
