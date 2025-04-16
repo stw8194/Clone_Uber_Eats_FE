@@ -1,33 +1,19 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { screen, waitFor } from "@testing-library/react";
 import { Login, LOGIN_MUTATION } from "../login";
-import { ApolloProvider } from "@apollo/client";
 import { createMockClient } from "mock-apollo-client";
 import userEvent from "@testing-library/user-event";
+import { render } from "../../test-utils";
 
 describe("<Login />", () => {
   it("should render OK", () => {
     const mockedClient = createMockClient();
-    render(
-      <Router>
-        <ApolloProvider client={mockedClient}>
-          <Login />
-        </ApolloProvider>
-      </Router>
-    );
-
+    render(<Login />, { client: mockedClient });
     expect(document.title).toBe("Login | CUber Eats");
   });
 
   it("should display email validation errors", async () => {
     const mockedClient = createMockClient();
-    render(
-      <Router>
-        <ApolloProvider client={mockedClient}>
-          <Login />
-        </ApolloProvider>
-      </Router>
-    );
+    render(<Login />, { client: mockedClient });
 
     const email = screen.getByPlaceholderText("Email");
     userEvent.type(email, "this@wont");
@@ -42,13 +28,7 @@ describe("<Login />", () => {
 
   it("should display password required errors", async () => {
     const mockedClient = createMockClient();
-    render(
-      <Router>
-        <ApolloProvider client={mockedClient}>
-          <Login />
-        </ApolloProvider>
-      </Router>
-    );
+    render(<Login />, { client: mockedClient });
 
     const email = screen.getByPlaceholderText("Email");
     const submitBtn = screen.getByRole("button");
@@ -65,13 +45,7 @@ describe("<Login />", () => {
       email: "test@will.be",
       password: "done",
     };
-    render(
-      <Router>
-        <ApolloProvider client={mockedClient}>
-          <Login />
-        </ApolloProvider>
-      </Router>
-    );
+    render(<Login />, { client: mockedClient });
 
     const email = screen.getByPlaceholderText("Email");
     const password = screen.getByPlaceholderText("Password");
@@ -100,13 +74,7 @@ describe("<Login />", () => {
       email: "test@will.be",
       password: "done",
     };
-    render(
-      <Router>
-        <ApolloProvider client={mockedClient}>
-          <Login />
-        </ApolloProvider>
-      </Router>
-    );
+    render(<Login />, { client: mockedClient });
 
     const email = screen.getByPlaceholderText("Email");
     const password = screen.getByPlaceholderText("Password");

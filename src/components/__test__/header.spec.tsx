@@ -1,8 +1,8 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { BrowserRouter as Router } from "react-router-dom";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { Header } from "../header";
 import { ME_QUERY } from "../../hooks/useMe";
+import { render } from "../../test-utils";
 
 const mocks = (verified: boolean) => [
   {
@@ -26,9 +26,7 @@ describe("<Header />", () => {
   it("should render with veirfy banner", async () => {
     render(
       <MockedProvider mocks={mocks(false)}>
-        <Router>
-          <Header />
-        </Router>
+        <Header />
       </MockedProvider>
     );
     await waitFor(() => {
@@ -39,9 +37,7 @@ describe("<Header />", () => {
   it("should render without verify banner", async () => {
     render(
       <MockedProvider mocks={mocks(true)}>
-        <Router>
-          <Header />
-        </Router>
+        <Header />
       </MockedProvider>
     );
     await waitFor(() => {

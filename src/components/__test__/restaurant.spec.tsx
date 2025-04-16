@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { Restaurant } from "../restaurant";
-import { BrowserRouter as Router } from "react-router-dom";
+import { render } from "../../test-utils";
 
 const restaurantProps = {
   id: "1",
@@ -10,11 +10,7 @@ const restaurantProps = {
 
 describe("<Restaurant />", () => {
   it("should render OK with props", () => {
-    render(
-      <Router>
-        <Restaurant {...restaurantProps} />
-      </Router>
-    );
+    render(<Restaurant {...restaurantProps} />);
     expect(screen.getByRole("link")).toBeInTheDocument();
     expect(screen.getByRole("link")).toHaveAttribute(
       "href",

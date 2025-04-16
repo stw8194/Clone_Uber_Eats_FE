@@ -1,14 +1,8 @@
-import { render } from "@testing-library/react";
+import { render } from "../../test-utils";
 import { NotFound } from "../404";
-import { BrowserRouter as Router } from "react-router-dom";
-
 describe("<NotFound />", () => {
   it("should render OK", () => {
-    render(
-      <Router>
-        <NotFound />
-      </Router>
-    );
+    render(<NotFound />);
     expect(document.title).toBe("Not Found | CUber Eats");
   });
 });
