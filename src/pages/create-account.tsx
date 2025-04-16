@@ -11,7 +11,7 @@ import {
 import { SubmitButton } from "../components/submit-button";
 import { Link, useHistory } from "react-router-dom";
 
-const CREATE_ACCOUNT_MUTATION = graphql(`
+export const CREATE_ACCOUNT_MUTATION = graphql(`
   mutation CreateAccount($createAccountInput: CreateAccountInput!) {
     createAccount(input: $createAccountInput) {
       ok
@@ -97,7 +97,6 @@ export const CreateAccount = () => {
           <input
             {...register("password", {
               required: "Password is required",
-              minLength: 10,
             })}
             type="password"
             placeholder="Password"
@@ -105,9 +104,6 @@ export const CreateAccount = () => {
           />
           {errors.password?.message && (
             <FormError errorMessage={errors.password.message} />
-          )}
-          {errors.password?.type === "minLength" && (
-            <FormError errorMessage="Password must be more than 10 chars." />
           )}
           <select
             {...register("role", {
