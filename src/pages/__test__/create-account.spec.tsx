@@ -4,7 +4,25 @@ import { render, screen, waitFor } from "../../test-utils";
 import userEvent from "@testing-library/user-event";
 import { UserRole } from "../../gql/graphql";
 
+const mockPush = jest.fn();
+
+jest.mock("react-router-dom", () => {
+  const realModule = jest.requireActual("react-router-dom");
+  return {
+    ...realModule,
+    useHistory: () => {
+      return {
+        push: mockPush,
+      };
+    },
+  };
+});
+
 describe("<CreateAccount />", () => {
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   it("should render ok", () => {
     const mockedClient = createMockClient();
     render(<CreateAccount />, { client: mockedClient });
@@ -106,5 +124,6 @@ describe("<CreateAccount />", () => {
       createAccountInput: { ...formData },
     });
     expect(window.alert).toHaveBeenCalledWith("Account created");
+    expect(mockPush).toHaveBeenCalledWith("/");
   });
 });
