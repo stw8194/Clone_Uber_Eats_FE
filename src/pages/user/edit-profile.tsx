@@ -14,7 +14,7 @@ interface IEditProfileForm {
   password?: string;
 }
 
-const EDIT_PROFILE_MUTATION = graphql(`
+export const EDIT_PROFILE_MUTATION = graphql(`
   mutation EditProfile($editProfileInput: EditProfileInput!) {
     editProfile(input: $editProfileInput) {
       ok
@@ -31,6 +31,7 @@ export const EditProfile = () => {
     register,
     handleSubmit,
     getValues,
+    watch,
     formState: { isValid },
   } = useForm<IEditProfileForm>({
     mode: "onChange",
@@ -87,6 +88,9 @@ export const EditProfile = () => {
     });
   };
 
+  const email = watch("email");
+  const password = watch("password");
+
   return (
     <div className="mt-52 flex flex-col justify-center items-center">
       <title>Edit Profile | CUber Eats</title>
@@ -97,13 +101,26 @@ export const EditProfile = () => {
             {...register("email", {
               pattern:
                 /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              validate: () => {
+                if (!email && !password) {
+                  return "Email or Password is required";
+                }
+                return true;
+              },
             })}
             type="email"
             placeholder="Email"
             className="input"
           />
           <input
-            {...register("password", {})}
+            {...register("password", {
+              validate: () => {
+                if (!email && !password) {
+                  return "Email or Password is required";
+                }
+                return true;
+              },
+            })}
             type="password"
             placeholder="Password"
             className="input"

@@ -29,16 +29,16 @@ const verifyEmailMutationResults = (ok: boolean, error: string | null) => ({
   },
 });
 
-const meQueryResults = (verified: boolean) => ({
+const meQueryResults = {
   data: {
     me: {
       id: 1,
       email: "test@will.work",
       role: UserRole.Client,
-      verified,
+      verified: false,
     },
   },
-});
+};
 
 describe("<ConfirmEmail />", () => {
   afterAll(() => {
@@ -56,7 +56,7 @@ describe("<ConfirmEmail />", () => {
       ...verifyEmailMutationResults(true, null),
     });
     const mockedQueryResponse = jest.fn().mockResolvedValue({
-      ...meQueryResults(true),
+      ...meQueryResults,
     });
     mockedClient.setRequestHandler(
       VERIFY_EMAIL_MUTATION,
@@ -81,7 +81,7 @@ describe("<ConfirmEmail />", () => {
       ...verifyEmailMutationResults(false, "No code"),
     });
     const mockedQueryResponse = jest.fn().mockResolvedValue({
-      ...meQueryResults(true),
+      ...meQueryResults,
     });
     mockedClient.setRequestHandler(
       VERIFY_EMAIL_MUTATION,
@@ -108,7 +108,7 @@ describe("<ConfirmEmail />", () => {
       ...verifyEmailMutationResults(false, "Invalid code"),
     });
     const mockedQueryResponse = jest.fn().mockResolvedValue({
-      ...meQueryResults(true),
+      ...meQueryResults,
     });
     mockedClient.setRequestHandler(
       VERIFY_EMAIL_MUTATION,
