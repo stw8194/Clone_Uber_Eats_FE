@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { useMe } from "../../hooks/useMe";
 
-const VERIFY_EMAIL_MUTATION = graphql(`
+export const VERIFY_EMAIL_MUTATION = graphql(`
   mutation VerifyEmail($verifyEmailInput: VerifyEmailInput!) {
     verifyEmail(input: $verifyEmailInput) {
       ok
@@ -39,15 +39,24 @@ export const ConfirmEmail = () => {
       });
       history.push("/");
     }
+    if (!ok) {
+      window.alert("Invalid verification code");
+      history.replace("/");
+    }
   };
-  const [verifyEmailMutation] = useMutation<
-    VerifyEmailMutation,
-    VerifyEmailMutationVariables
-  >(VERIFY_EMAIL_MUTATION, {
-    onCompleted,
-  });
+  const [verifyEmailMutation, { data: verifyEmailMutationResults }] =
+    useMutation<VerifyEmailMutation, VerifyEmailMutationVariables>(
+      VERIFY_EMAIL_MUTATION,
+      {
+        onCompleted,
+      }
+    );
   useEffect(() => {
     const [_, code] = window.location.href.split("code=");
+    if (!code) {
+      window.alert("Verification needs code");
+      return history.replace("/");
+    }
     verifyEmailMutation({
       variables: {
         verifyEmailInput: {
