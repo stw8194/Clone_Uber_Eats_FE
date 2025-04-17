@@ -3,7 +3,7 @@ import { graphql } from "../../gql";
 import { useQuery } from "@apollo/client";
 import { RestaurantQuery, RestaurantQueryVariables } from "../../gql/graphql";
 
-const RESTAURANT_QUERY = graphql(`
+export const RESTAURANT_QUERY = graphql(`
   query Restaurant($restaurantId: Float!) {
     restaurant(restaurantId: $restaurantId) {
       restaurant {
@@ -37,6 +37,9 @@ export const Restaurant = () => {
 
   return (
     <div className="flex flex-col px-10 max-w-7xl h-64 items-center justify-center mx-auto">
+      <title>
+        {restaurantQueryResults?.restaurant.restaurant?.name + " | Cuber Eats"}
+      </title>
       <div
         className="w-full bg-gray-500 h-full mb-3 bg-cover bg-center shrink-0 overflow-hidden rounded-xl"
         style={{

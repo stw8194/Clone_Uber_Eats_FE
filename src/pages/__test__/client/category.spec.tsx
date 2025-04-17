@@ -22,6 +22,44 @@ jest.mock("react-router-dom", () => {
   };
 });
 
+const mockCategoryQueryResults = {
+  data: {
+    category: {
+      totalPages: 1,
+      totalResults: 1,
+      restaurants: [
+        {
+          id: 1,
+          name: "restaurant1",
+          coverImg: "testRestaurantImg",
+          category: {
+            name: "testCategory",
+          },
+          address: "address",
+          isPromoted: false,
+        },
+        {
+          id: 2,
+          name: "restaurant2",
+          coverImg: "testRestaurantImg",
+          category: {
+            name: "testCategory",
+          },
+          address: "address",
+          isPromoted: false,
+        },
+      ],
+      category: {
+        id: 1,
+        name: "testCategory",
+        coverImg: "testCategoryImg",
+        slug: "testSlug",
+        restaurantCount: 1,
+      },
+    },
+  },
+};
+
 describe("<Category />", () => {
   afterAll(() => {
     jest.clearAllMocks();
@@ -29,22 +67,9 @@ describe("<Category />", () => {
 
   it("should render OK with query", async () => {
     const mockedClient = createMockClient();
-    const mockedQueryResponse = jest.fn().mockResolvedValue({
-      data: {
-        category: {
-          totalPages: 1,
-          totalResults: 1,
-          restaurants: [],
-          category: {
-            id: 1,
-            name: "testCategory",
-            coverImg: "testCategoryImg",
-            slug: "testSlug",
-            restaurantCount: 1,
-          },
-        },
-      },
-    });
+    const mockedQueryResponse = jest
+      .fn()
+      .mockResolvedValue({ ...mockCategoryQueryResults });
     mockedClient.setRequestHandler(CATEGORY_QUERY, mockedQueryResponse);
     render(<Category />, { client: mockedClient });
 
@@ -62,20 +87,7 @@ describe("<Category />", () => {
   it("should display category name and image", async () => {
     const mockedClient = createMockClient();
     const mockedQueryResponse = jest.fn().mockResolvedValue({
-      data: {
-        category: {
-          totalPages: 1,
-          totalResults: 1,
-          restaurants: [],
-          category: {
-            id: 1,
-            name: "testCategory",
-            coverImg: "testCategoryImg",
-            slug: "testSlug",
-            restaurantCount: 1,
-          },
-        },
-      },
+      ...mockCategoryQueryResults,
     });
     mockedClient.setRequestHandler(CATEGORY_QUERY, mockedQueryResponse);
     render(<Category />, { client: mockedClient });
@@ -90,43 +102,9 @@ describe("<Category />", () => {
 
   it("should call component with proper prop", async () => {
     const mockedClient = createMockClient();
-    const mockedQueryResponse = jest.fn().mockResolvedValue({
-      data: {
-        category: {
-          totalPages: 1,
-          totalResults: 1,
-          restaurants: [
-            {
-              id: 1,
-              name: "restaurant1",
-              coverImg: "testRestaurantImg",
-              category: {
-                name: "testCategory",
-              },
-              address: "address",
-              isPromoted: false,
-            },
-            {
-              id: 2,
-              name: "restaurant2",
-              coverImg: "testRestaurantImg",
-              category: {
-                name: "testCategory",
-              },
-              address: "address",
-              isPromoted: false,
-            },
-          ],
-          category: {
-            id: 1,
-            name: "testCategory",
-            coverImg: "testCategoryImg",
-            slug: "testSlug",
-            restaurantCount: 1,
-          },
-        },
-      },
-    });
+    const mockedQueryResponse = jest
+      .fn()
+      .mockResolvedValue({ ...mockCategoryQueryResults });
     mockedClient.setRequestHandler(CATEGORY_QUERY, mockedQueryResponse);
     render(<Category />, { client: mockedClient });
 
