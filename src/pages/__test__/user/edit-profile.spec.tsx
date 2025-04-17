@@ -40,6 +40,10 @@ const meQueryResults = {
 };
 
 describe("<EditProfile />", () => {
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   it("should render OK", async () => {
     const mockedClient = createMockClient();
     const mockedMutationResponse = jest.fn().mockResolvedValue({
