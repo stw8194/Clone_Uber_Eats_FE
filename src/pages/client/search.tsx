@@ -9,7 +9,7 @@ import {
 import { Restaurant } from "../../components/restaurant";
 import { ShowMoreButton } from "../../components/showmore-button";
 
-const SEARCH_RESTAURANT_QUERY = graphql(`
+export const SEARCH_RESTAURANT_QUERY = graphql(`
   query SearchRestaurant($searchRestaurantInput: SearchRestaurantInput!) {
     searchRestaurant(input: $searchRestaurantInput) {
       totalPages
@@ -60,6 +60,7 @@ export const Search = () => {
     );
   useEffect(() => {
     const [_, searchTerm] = location.search.split("?term=");
+    if (query === searchTerm) return;
     setQuery(searchTerm);
     if (!searchTerm) {
       return history.replace("/");
@@ -73,7 +74,7 @@ export const Search = () => {
       },
       onCompleted,
     });
-  }, [history, location, page, searchRestaurantQuery]);
+  }, [history, location, query, page, searchRestaurantQuery]);
   return (
     <div className="max-w-screen-xl pb-20 mx-auto mt-8">
       <title>Search | CUber Eats</title>

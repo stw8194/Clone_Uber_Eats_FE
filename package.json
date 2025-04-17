@@ -38,7 +38,8 @@
     "codegen:generate": "graphql-codegen",
     "start": "npm run codegen:generate && npm run tailwind:build && react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --verbose",
+    "test:cov": "npm test -- --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -63,6 +64,14 @@
     "@graphql-codegen/cli": "^5.0.5",
     "@parcel/watcher": "^2.5.1",
     "@types/react-router-dom": "^5.3.3",
+    "mock-apollo-client": "^1.3.1",
     "typescript": "^5.8.2"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "./src/components/**/*.tsx",
+      "./src/pages/**/*.tsx",
+      "./src/routers/**/*.tsx"
+    ]
   }
 }

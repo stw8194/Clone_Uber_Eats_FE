@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { authTokenVar, isLoggedInVar } from "../apollo";
 import { LOCALSTORAGE_TOKEN } from "../constants";
 
-const LOGIN_MUTATION = graphql(`
+export const LOGIN_MUTATION = graphql(`
   mutation Login($loginInput: LoginInput!) {
     login(input: $loginInput) {
       ok
@@ -90,7 +90,6 @@ export const Login = () => {
           <input
             {...register("password", {
               required: "Password is required",
-              minLength: 10,
             })}
             type="password"
             placeholder="Password"
@@ -98,9 +97,6 @@ export const Login = () => {
           />
           {errors.password?.message && (
             <FormError errorMessage={errors.password.message} />
-          )}
-          {errors.password?.type === "minLength" && (
-            <FormError errorMessage="Password must be more than 10 chars." />
           )}
           <SubmitButton
             canClick={isValid}
