@@ -79,6 +79,10 @@ const restaurantsQueryResults = {
 };
 
 describe("<Restaurants />", () => {
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   it("should render OK", async () => {
     const mockedClient = createMockClient();
     const mockedQueryResponse = jest.fn().mockResolvedValue({
