@@ -14,7 +14,7 @@ interface ISearchForm {
   searchTerm: string;
 }
 
-const RESTAURANTS_QUERY = graphql(`
+export const RESTAURANTS_QUERY = graphql(`
   query RestaurantsPage($restaurantsInput: RestaurantsInput!) {
     allCategories {
       ok
@@ -97,7 +97,7 @@ export const Restaurants = () => {
         className="bg-gray-800 w-full py-40 flex items-center justify-center"
       >
         <input
-          {...register("searchTerm", { required: true, min: 2 })}
+          {...register("searchTerm", { required: true, minLength: 2 })}
           type="Search"
           className="input rounded-md border-0 bg-white w-3/4 md:w-1/4"
           placeholder="Search restaurants..."
@@ -111,6 +111,7 @@ export const Restaurants = () => {
                 <Link key={category.id} to={`/category/${category.slug}`}>
                   <div className="flex flex-col group items-center cursor-pointer">
                     <div
+                      data-testid={category.id}
                       className="w-16 h-16 bg-cover group-hover:bg-gray-100 rounded-full"
                       style={{ backgroundImage: `url(${category.coverImg})` }}
                     ></div>

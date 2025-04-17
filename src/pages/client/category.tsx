@@ -80,6 +80,7 @@ export const Category = () => {
           {categoryQueryResults?.category.category?.name}
         </div>
         <div
+          data-testid={categoryQueryResults?.category.category?.id}
           className="w-32 h-32 ml-80 bg-cover rounded-full"
           style={{
             backgroundImage: `url(${categoryQueryResults?.category.category?.coverImg})`,

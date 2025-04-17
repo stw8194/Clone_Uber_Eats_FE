@@ -95,9 +95,9 @@ describe("<Category />", () => {
     await waitFor(() => {
       expect(screen.getByText("testCategory")).toBeInTheDocument();
     });
-    const backgroundImage = screen.getByText("testCategory")
-      .nextSibling as HTMLElement;
-    expect(backgroundImage.style.backgroundImage).toBe("url(testCategoryImg)");
+    expect(
+      screen.getByTestId(mockCategoryQueryResults.data.category.category.id)
+    ).toHaveStyle({ backgroundImage: "url(testCategoryImg)" });
   });
 
   it("should call component with proper prop", async () => {

@@ -30,7 +30,7 @@ describe("<Restaurant />", () => {
 
     await waitFor(() => {
       expect(document.title).toBe(
-        `${restaurantQueryResults.data.restaurant.restaurant.name} | Cuber Eats`
+        `${restaurantQueryResults.data.restaurant.restaurant.name} | CUber Eats`
       );
     });
   });
@@ -48,11 +48,10 @@ describe("<Restaurant />", () => {
         screen.getByText(restaurantQueryResults.data.restaurant.restaurant.name)
       ).toBeInTheDocument();
     });
-    const backgroundImage = screen.getByText(
-      restaurantQueryResults.data.restaurant.restaurant.name
-    ).previousSibling as HTMLElement;
-    expect(backgroundImage.style.backgroundImage).toBe(
-      `url(${restaurantQueryResults.data.restaurant.restaurant.coverImg})`
-    );
+    expect(
+      screen.getByTestId(restaurantQueryResults.data.restaurant.restaurant.id)
+    ).toHaveStyle({
+      backgroundImage: `url(${restaurantQueryResults.data.restaurant.restaurant.coverImg})`,
+    });
   });
 });
