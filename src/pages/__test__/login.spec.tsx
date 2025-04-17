@@ -1,8 +1,7 @@
-import { screen, waitFor } from "@testing-library/react";
 import { Login, LOGIN_MUTATION } from "../login";
 import { createMockClient } from "mock-apollo-client";
 import userEvent from "@testing-library/user-event";
-import { render } from "../../test-utils";
+import { render, screen, waitFor } from "../../test-utils";
 
 describe("<Login />", () => {
   it("should render OK", () => {

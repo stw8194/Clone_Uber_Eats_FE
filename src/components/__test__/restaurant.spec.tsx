@@ -1,6 +1,5 @@
-import { screen } from "@testing-library/react";
 import { Restaurant } from "../restaurant";
-import { render } from "../../test-utils";
+import { render, screen } from "../../test-utils";
 
 const restaurantProps = {
   id: "1",

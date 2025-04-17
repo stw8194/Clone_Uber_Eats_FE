@@ -103,9 +103,7 @@ export const EditProfile = () => {
             className="input"
           />
           <input
-            {...register("password", {
-              minLength: 10,
-            })}
+            {...register("password", {})}
             type="password"
             placeholder="Password"
             className="input"

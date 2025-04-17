@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Restaurant } from "../../components/restaurant";
 import { ShowMoreButton } from "../../components/showmore-button";
 
-const CATEGORY_QUERY = graphql(`
+export const CATEGORY_QUERY = graphql(`
   query Category($categoryInput: CategoryInput!) {
     category(input: $categoryInput) {
       totalPages

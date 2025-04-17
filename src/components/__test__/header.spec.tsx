@@ -1,8 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { screen, waitFor } from "@testing-library/react";
 import { Header } from "../header";
 import { ME_QUERY } from "../../hooks/useMe";
-import { render } from "../../test-utils";
+import { render, screen, waitFor } from "../../test-utils";
 
 const mocks = (verified: boolean) => [
   {
