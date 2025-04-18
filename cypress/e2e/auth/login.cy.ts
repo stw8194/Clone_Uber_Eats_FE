@@ -18,7 +18,7 @@ describe("Log In", () => {
     user.findByRole("alert").should("have.text", "Password is required");
   });
 
-  it("can fill out the form", () => {
+  it("can fill out the form and login", () => {
     user.visit("/");
     user.findByPlaceholderText(/email/i).type("client@test.com");
     user.findByPlaceholderText(/password/i).type("1234");
