@@ -76,7 +76,7 @@ export const Search = () => {
     });
   }, [history, location, query, page, searchRestaurantQuery]);
   return (
-    <div className="max-w-screen-xl pb-20 mx-auto mt-8">
+    <div className="container pb-20 mt-8">
       <title>Search | CUber Eats</title>
       <div className="px-16 text-xl font-semibold">{`${searchRestaurantQueryResults?.searchRestaurant.totalResults} results for "${query}"`}</div>
       <div className="grid mt-10 md:grid-cols-4 gap-x-4 gap-y-8">

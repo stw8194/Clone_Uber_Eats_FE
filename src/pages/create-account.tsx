@@ -129,7 +129,7 @@ export const CreateAccount = () => {
         </form>
         <div>
           Already use CUber?{" "}
-          <Link to="/" className="text-lime-600 hover:underline">
+          <Link to="/" className="link">
             Sign in
           </Link>
         </div>

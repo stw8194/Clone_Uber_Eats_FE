@@ -73,7 +73,7 @@ export const Category = () => {
   });
 
   return (
-    <div className="max-w-screen-xl pb-20 mx-auto mt-8">
+    <div className="container pb-20 mt-8">
       <title>Category | CUber Eats</title>
       <div className="flex items-center justify-between w-full mx-auto px-16">
         <div className="mt-1 mr-96 text-6xl font-bold whitespace-nowrap">

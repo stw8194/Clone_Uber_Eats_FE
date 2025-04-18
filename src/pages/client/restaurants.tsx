@@ -90,7 +90,7 @@ export const Restaurants = () => {
   };
 
   return (
-    <div>
+    <div className="">
       <title>Home | CUber Eats</title>
       <form
         onSubmit={handleSubmit(onSearchSubmit)}
@@ -104,7 +104,7 @@ export const Restaurants = () => {
         />
       </form>
       {allRestaurants && (
-        <div className="max-w-screen-xl pb-20 mx-auto mt-8">
+        <div className="container pb-20 mt-8">
           <div className="flex justify-around max-w-sm mx-auto">
             {restaurantsQueryResults?.allCategories.categories?.map(
               (category) => (
