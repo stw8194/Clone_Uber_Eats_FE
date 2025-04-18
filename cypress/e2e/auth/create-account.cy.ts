@@ -1,18 +1,27 @@
 describe("Create Account", () => {
   const user = cy;
+  it("can go log in page by clicking sign in", () => {
+    user.visit("/create-account");
+    user.findByText("Sign in").click();
+    user.assertTitle("Login");
+  });
+
   it("should see email & password validation errors", () => {
     user.visit("/");
     user.findByText(/create an account/i).click();
-    user.title().should("eq", "Create Account | CUber Eats");
+    user.assertTitle("Create Account");
     user.findByPlaceholderText(/email/i).type("not@work");
+    user.assertDeactivatedButton();
     user.findByRole("alert").should("have.text", "invalid email address");
     user.findByPlaceholderText(/email/i).clear();
+    user.assertDeactivatedButton();
     user.findByRole("alert").should("have.text", "Email is required");
     user.findByPlaceholderText(/email/i).type("it@will.work");
     user
       .findByPlaceholderText(/password/i)
       .type("1")
       .clear();
+    user.assertDeactivatedButton();
     user.findByRole("alert").should("have.text", "Password is required");
   });
 
@@ -23,13 +32,7 @@ describe("Create Account", () => {
       if (operationName && operationName === "CreateAccount") {
         req.reply((res) => {
           res.send({
-            data: {
-              createAccount: {
-                ok: true,
-                error: null,
-                __typename: "CreateAccountOutput",
-              },
-            },
+            fixture: "auth/create-account.json",
           });
         });
       }
