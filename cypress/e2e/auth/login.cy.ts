@@ -20,12 +20,6 @@ describe("Log In", () => {
 
   it("can fill out the form and login", () => {
     user.visit("/");
-    user.findByPlaceholderText(/email/i).type("client@test.com");
-    user.findByPlaceholderText(/password/i).type("1234");
-    user
-      .findByRole("button")
-      .should("not.have.class", "pointer-events-none")
-      .click();
-    user.window().its("localStorage.cuber-token").should("be.a", "string");
+    user.login("client@test.com", "1234");
   });
 });

@@ -38,12 +38,7 @@ describe("Create Account", () => {
     user.findByPlaceholderText(/email/i).type("client@test.com");
     user.findByPlaceholderText(/password/i).type("1234");
     user.findByRole("button").click();
-    user.url().should("match", /\/$/);
-    user.title().should("eq", "Login | CUber Eats");
-    user.findByPlaceholderText(/email/i).type("client@test.com");
-    user.findByPlaceholderText(/password/i).type("1234");
-    user.findByRole("button").click();
-    user.window().its("localStorage.cuber-token").should("be.a", "string");
+    user.login("client@test.com", "1234");
   });
 
   it("should see email duplication error", () => {

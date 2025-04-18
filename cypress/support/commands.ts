@@ -36,3 +36,23 @@
 //   }
 // }
 import "@testing-library/cypress/add-commands";
+
+Cypress.Commands.add("assertLoggedIn", () => {
+  cy.window().its("localStorage.cuber-token").should("be.a", "string");
+});
+
+Cypress.Commands.add("assertLoggedOut", () => {
+  cy.window().its("localStorage.cuber-token").should("be.undefined");
+});
+
+Cypress.Commands.add("login", (email: string, password: string) => {
+  cy.assertLoggedOut();
+  cy.url().should("match", /\/$/);
+  cy.title().should("eq", "Login | CUber Eats");
+  cy.findByPlaceholderText(/email/i).type(email);
+  cy.findByPlaceholderText(/password/i).type(password);
+  cy.findByRole("button")
+    .click()
+    .should("not.have.class", "pointer-events-none");
+  cy.assertLoggedIn();
+});
