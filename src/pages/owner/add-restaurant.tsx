@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { SubmitButton } from "../../components/submit-button";
 import { FormError } from "../../components/form-error";
 import { useHistory } from "react-router-dom";
+import { useState } from "react";
 
 const CREATE_RESTAURANT_MUTATION = graphql(`
   mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {
@@ -37,20 +38,33 @@ interface IFormProps {
   name: string;
   address: string;
   categoryName: string;
+  rawFile: FileList;
 }
 
 export const AddRestaurant = () => {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
   const { data: allCategoriesQueryRestults } = useQuery<
     AllCategoriesQuery,
     AllCategoriesQueryVariables
   >(ALL_CATEGORIES);
 
-  const [
-    createRestaurantMutation,
-    { data: createRestaurantMutationResults, loading },
-  ] = useMutation<CreateRestaurantMutation, CreateRestaurantMutationVariables>(
-    CREATE_RESTAURANT_MUTATION
-  );
+  const onCompleted = (data: CreateRestaurantMutation) => {
+    const {
+      createRestaurant: { ok },
+    } = data;
+    if (ok) {
+      setUploading(false);
+    }
+  };
+
+  const [createRestaurantMutation, { data: createRestaurantMutationResults }] =
+    useMutation<CreateRestaurantMutation, CreateRestaurantMutationVariables>(
+      CREATE_RESTAURANT_MUTATION,
+      { onCompleted }
+    );
 
   const {
     register,
@@ -60,20 +74,37 @@ export const AddRestaurant = () => {
   } = useForm<IFormProps>({ mode: "onChange" });
 
   const history = useHistory();
-  const onSubmit = () => {
-    const { name, address, categoryName: rawCategory } = getValues();
-    const category = JSON.parse(rawCategory);
-    createRestaurantMutation({
-      variables: {
-        createRestaurantInput: {
-          name,
-          address,
-          categoryName: category.name,
-          coverImg: category.coverImg,
+  const onSubmit = async () => {
+    try {
+      setUploading(true);
+      const { name, address, categoryName, rawFile } = getValues();
+      const file = rawFile[0];
+      const formBody = new FormData();
+      formBody.append("file", file);
+      const { url: coverImg, error } = await (
+        await fetch("http://localhost:4000/uploads", {
+          method: "POST",
+          body: formBody,
+        })
+      ).json();
+      if (error) {
+        setUploadError(error);
+        return;
+      }
+      createRestaurantMutation({
+        variables: {
+          createRestaurantInput: {
+            name,
+            address,
+            categoryName,
+            coverImg,
+          },
         },
-      },
-    });
-    history.push("/");
+      });
+      history.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -105,21 +136,65 @@ export const AddRestaurant = () => {
         >
           {allCategoriesQueryRestults?.allCategories.ok &&
             allCategoriesQueryRestults?.allCategories.categories?.map(
-              (category, index) => (
-                <option key={index} value={JSON.stringify(category)}>
-                  {category.name}
-                </option>
-              )
+              (category, index) => <option key={index}>{category.name}</option>
             )}
         </select>
         {errors.categoryName?.message && (
           <FormError errorMessage={errors.categoryName.message} />
         )}
+        <label
+          htmlFor="rawFile"
+          className="inline-flex items-center p-3  text-lg bg-lime-600 text-white font-medium rounded-xl shadow cursor-pointer hover:bg-lime-700 transition"
+        >
+          📁 이미지 업로드
+        </label>
+        <input
+          id="rawFile"
+          className="hidden"
+          {...register("rawFile", {
+            required: "Cover image is required",
+            validate: {
+              isImage: (files) => {
+                const file = files?.[0];
+                return file.type.startsWith("image/")
+                  ? true
+                  : "Only image files are allowed";
+              },
+            },
+            onChange: (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const url = URL.createObjectURL(file);
+                setPreview(url);
+              }
+            },
+          })}
+          type="file"
+          accept=".jpg,.jpeg,.png,.webp"
+        />
+        {preview && (
+          <img
+            src={preview}
+            alt="Preview"
+            className="mt-4 w-60 h-60 object-cover mx-auto rounded-xl border border-gray-300 shadow"
+          />
+        )}
+        {errors.rawFile?.message && (
+          <FormError errorMessage={errors.rawFile.message} />
+        )}
         <SubmitButton
           canClick={isValid}
-          loading={loading}
+          loading={uploading}
           actionText="Create Restaurant"
         />
+        {createRestaurantMutationResults?.createRestaurant?.error && (
+          <FormError
+            errorMessage={
+              createRestaurantMutationResults.createRestaurant.error
+            }
+          />
+        )}
+        {uploadError && <FormError errorMessage={uploadError} />}
       </form>
     </div>
   );
