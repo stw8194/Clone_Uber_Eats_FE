@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { graphql } from "../../gql";
 import {
   AllCategoriesQuery,
@@ -11,12 +11,14 @@ import { SubmitButton } from "../../components/submit-button";
 import { FormError } from "../../components/form-error";
 import { useHistory } from "react-router-dom";
 import { useState } from "react";
+import { MY_RESTAURANTS_QUERY } from "./my-restaurants";
 
 const CREATE_RESTAURANT_MUTATION = graphql(`
   mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {
     createRestaurant(input: $createRestaurantInput) {
       ok
       error
+      restaurantId
     }
   }
 `);
@@ -42,9 +44,11 @@ interface IFormProps {
 }
 
 export const AddRestaurant = () => {
+  const client = useApolloClient();
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
 
   const { data: allCategoriesQueryRestults } = useQuery<
     AllCategoriesQuery,
@@ -53,17 +57,52 @@ export const AddRestaurant = () => {
 
   const onCompleted = (data: CreateRestaurantMutation) => {
     const {
-      createRestaurant: { ok },
+      createRestaurant: { ok, restaurantId },
     } = data;
     if (ok) {
+      const { name, address, categoryName } = getValues();
       setUploading(false);
+      const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });
+      if (queryResult && queryResult.myRestaurants.restaurants) {
+        client.writeQuery({
+          query: MY_RESTAURANTS_QUERY,
+          data: {
+            myRestaurants: {
+              ...queryResult?.myRestaurants,
+              restaurants: [
+                {
+                  id: restaurantId,
+                  name,
+                  address,
+                  category: {
+                    name: categoryName,
+                    __typename: "Category",
+                  },
+                  coverImg: imageUrl,
+                  isPromoted: false,
+                  promotedUntil: null,
+                  __typename: "Restaurant",
+                },
+                ...queryResult?.myRestaurants.restaurants,
+              ],
+            },
+          },
+        });
+      }
     }
   };
 
   const [createRestaurantMutation, { data: createRestaurantMutationResults }] =
     useMutation<CreateRestaurantMutation, CreateRestaurantMutationVariables>(
       CREATE_RESTAURANT_MUTATION,
-      { onCompleted }
+      {
+        onCompleted,
+        refetchQueries: [
+          {
+            query: MY_RESTAURANTS_QUERY,
+          },
+        ],
+      }
     );
 
   const {
@@ -101,6 +140,7 @@ export const AddRestaurant = () => {
           },
         },
       });
+      setImageUrl(coverImg);
       history.push("/");
     } catch (error) {
       console.log(error);
@@ -173,11 +213,10 @@ export const AddRestaurant = () => {
           accept=".jpg,.jpeg,.png,.webp"
         />
         {preview && (
-          <img
-            src={preview}
-            alt="Preview"
-            className="mt-4 w-60 h-60 object-cover mx-auto rounded-xl border border-gray-300 shadow"
-          />
+          <div
+            className="mt-4 w-60 h-60 object-cover bg-cover bg-center mx-auto rounded-xl border border-gray-300 shadow"
+            style={{ backgroundImage: `url(${preview})` }}
+          ></div>
         )}
         {errors.rawFile?.message && (
           <FormError errorMessage={errors.rawFile.message} />
