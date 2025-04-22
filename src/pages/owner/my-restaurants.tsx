@@ -43,7 +43,7 @@ export const MyRestaurants = () => {
             className=" text-lg px-3 py-2 justify-self-end font-semibold focus:outline-none rounded-lg text-white transition-colors bg-lime-800 hover:bg-lime-700"
             to="/add-restaurant"
           >
-            <button>Create one!</button>
+            Create one!
           </Link>
         </div>
         {myRestaurantsQueryResults?.myRestaurants.ok &&
