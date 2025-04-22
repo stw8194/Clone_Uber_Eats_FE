@@ -200,6 +200,12 @@ export const AddRestaurant = () => {
                   ? true
                   : "Only image files are allowed";
               },
+              sizeUnder5mb: (files) => {
+                const file = files?.[0];
+                return file.size < 5 * 1024 * 1024
+                  ? true
+                  : "Only images under 5MB are allowed";
+              },
             },
             onChange: (e) => {
               const file = e.target.files?.[0];
