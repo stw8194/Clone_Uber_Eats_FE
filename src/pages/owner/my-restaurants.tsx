@@ -37,15 +37,18 @@ export const MyRestaurants = () => {
     <div>
       <title>My Restaurants | CUber Eats</title>
       <div className="container mt-32">
-        <h2 className="text-4xl font-medium mb-10">My Restaurants</h2>
+        <div className="grid grid-cols-2 mb-10 items-center justify-between my-3 py-3 px-4">
+          <h2 className="text-4xl font-medium">My Restaurants</h2>
+          <Link
+            className=" text-lg px-3 py-2 justify-self-end font-semibold focus:outline-none rounded-lg text-white transition-colors bg-lime-800 hover:bg-lime-700"
+            to="/add-restaurant"
+          >
+            <button>Create one!</button>
+          </Link>
+        </div>
         {myRestaurantsQueryResults?.myRestaurants.ok &&
           (myRestaurantsQueryResults.myRestaurants.restaurants?.length === 0 ? (
-            <>
-              <h4 className="text-xl mb-5">No restaurants here.</h4>
-              <Link className="link" to="/add-restaurant">
-                Create one! &rarr;
-              </Link>
-            </>
+            <h4 className="text-xl mb-5">No restaurants here.</h4>
           ) : (
             <div className="grid mt-10 md:grid-cols-4 gap-x-4 gap-y-8">
               {myRestaurantsQueryResults?.myRestaurants.restaurants?.map(
