@@ -13,14 +13,7 @@ export const MY_RESTAURANTS_QUERY = graphql(`
       ok
       error
       restaurants {
-        id
-        name
-        coverImg
-        category {
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
         promotedUntil
       }
     }

@@ -20,11 +20,7 @@ export const RESTAURANTS_QUERY = graphql(`
       ok
       error
       categories {
-        id
-        name
-        coverImg
-        slug
-        restaurantCount
+        ...CategoryParts
       }
     }
 
@@ -32,14 +28,7 @@ export const RESTAURANTS_QUERY = graphql(`
       totalPages
       totalResults
       results {
-        id
-        name
-        coverImg
-        category {
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
       }
     }
   }

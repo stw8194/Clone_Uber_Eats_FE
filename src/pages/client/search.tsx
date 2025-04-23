@@ -15,14 +15,7 @@ export const SEARCH_RESTAURANT_QUERY = graphql(`
       totalPages
       totalResults
       restaurants {
-        id
-        name
-        coverImg
-        category {
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
       }
     }
   }

@@ -12,21 +12,10 @@ export const CATEGORY_QUERY = graphql(`
       totalPages
       totalResults
       restaurants {
-        id
-        name
-        coverImg
-        category {
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
       }
       category {
-        id
-        name
-        coverImg
-        slug
-        restaurantCount
+        ...CategoryParts
       }
     }
   }

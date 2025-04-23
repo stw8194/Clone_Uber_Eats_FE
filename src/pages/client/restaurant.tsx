@@ -7,14 +7,10 @@ export const RESTAURANT_QUERY = graphql(`
   query Restaurant($restaurantId: Float!) {
     restaurant(restaurantId: $restaurantId) {
       restaurant {
-        id
-        name
-        coverImg
-        category {
-          name
+        ...RestaurantParts
+        menu {
+          ...DishParts
         }
-        address
-        isPromoted
       }
     }
   }
