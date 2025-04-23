@@ -23,7 +23,7 @@ const CREATE_RESTAURANT_MUTATION = graphql(`
   }
 `);
 
-const ALL_CATEGORIES = graphql(`
+export const ALL_CATEGORIES = graphql(`
   query allCategories {
     allCategories {
       ok

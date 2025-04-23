@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faPercent } from "@fortawesome/free-solid-svg-icons";
 
-const MY_RESTAURANT_QUERY = graphql(`
+export const MY_RESTAURANT_QUERY = graphql(`
   query MyRestaurant($restaurantId: Float!) {
     myRestaurant(restaurantId: $restaurantId) {
       ok
@@ -61,7 +61,7 @@ export const MyRestaurant = () => {
             <div className="relative w-10 h-10 mx-4 mt-4 overflow-visible">
               <Link
                 className="group absolute right-0 top-0 h-10 w-10 gap-2 hover:bg-white hover:w-35 bg-white/30 flex items-center justify-center rounded-full transition-all"
-                to={"/add-dish"}
+                to={`/edit-restaurant/${id}`}
               >
                 <FontAwesomeIcon icon={faPenToSquare} />
                 <span className="hidden group-hover:flex transition-all whitespace-nowrap text-lg font-semibold">
