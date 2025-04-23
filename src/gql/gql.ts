@@ -24,10 +24,11 @@ type Documents = {
     "\n  query SearchRestaurant($searchRestaurantInput: SearchRestaurantInput!) {\n    searchRestaurant(input: $searchRestaurantInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n": typeof types.SearchRestaurantDocument,
     "\n  mutation CreateAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": typeof types.CreateAccountDocument,
     "\n  mutation Login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": typeof types.LoginDocument,
+    "\n  mutation CreateDish($createDishInput: CreateDishInput!) {\n    createDish(input: $createDishInput) {\n      ok\n      error\n      dishId\n    }\n  }\n": typeof types.CreateDishDocument,
     "\n  mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {\n    createRestaurant(input: $createRestaurantInput) {\n      ok\n      error\n      restaurantId\n    }\n  }\n": typeof types.CreateRestaurantDocument,
     "\n  query allCategories {\n    allCategories {\n      ok\n      error\n      categories {\n        name\n        coverImg\n      }\n    }\n  }\n": typeof types.AllCategoriesDocument,
     "\n  mutation EditRestaurant($editRestaurantInput: EditRestaurantInput!) {\n    editRestaurant(input: $editRestaurantInput) {\n      ok\n      error\n    }\n  }\n": typeof types.EditRestaurantDocument,
-    "\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n      }\n    }\n  }\n": typeof types.MyRestaurantDocument,
+    "\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n        menu {\n          ...DishParts\n        }\n      }\n    }\n  }\n": typeof types.MyRestaurantDocument,
     "\n  query MyRestaurants {\n    myRestaurants {\n      ok\n      error\n      restaurants {\n        ...RestaurantParts\n        promotedUntil\n      }\n    }\n  }\n": typeof types.MyRestaurantsDocument,
     "\n  mutation VerifyEmail($verifyEmailInput: VerifyEmailInput!) {\n    verifyEmail(input: $verifyEmailInput) {\n      ok\n      error\n    }\n  }\n": typeof types.VerifyEmailDocument,
     "\n          fragment VerifiedUser on User {\n            verified\n          }\n        ": typeof types.VerifiedUserFragmentDoc,
@@ -45,10 +46,11 @@ const documents: Documents = {
     "\n  query SearchRestaurant($searchRestaurantInput: SearchRestaurantInput!) {\n    searchRestaurant(input: $searchRestaurantInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n": types.SearchRestaurantDocument,
     "\n  mutation CreateAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
     "\n  mutation Login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
+    "\n  mutation CreateDish($createDishInput: CreateDishInput!) {\n    createDish(input: $createDishInput) {\n      ok\n      error\n      dishId\n    }\n  }\n": types.CreateDishDocument,
     "\n  mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {\n    createRestaurant(input: $createRestaurantInput) {\n      ok\n      error\n      restaurantId\n    }\n  }\n": types.CreateRestaurantDocument,
     "\n  query allCategories {\n    allCategories {\n      ok\n      error\n      categories {\n        name\n        coverImg\n      }\n    }\n  }\n": types.AllCategoriesDocument,
     "\n  mutation EditRestaurant($editRestaurantInput: EditRestaurantInput!) {\n    editRestaurant(input: $editRestaurantInput) {\n      ok\n      error\n    }\n  }\n": types.EditRestaurantDocument,
-    "\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n      }\n    }\n  }\n": types.MyRestaurantDocument,
+    "\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n        menu {\n          ...DishParts\n        }\n      }\n    }\n  }\n": types.MyRestaurantDocument,
     "\n  query MyRestaurants {\n    myRestaurants {\n      ok\n      error\n      restaurants {\n        ...RestaurantParts\n        promotedUntil\n      }\n    }\n  }\n": types.MyRestaurantsDocument,
     "\n  mutation VerifyEmail($verifyEmailInput: VerifyEmailInput!) {\n    verifyEmail(input: $verifyEmailInput) {\n      ok\n      error\n    }\n  }\n": types.VerifyEmailDocument,
     "\n          fragment VerifiedUser on User {\n            verified\n          }\n        ": types.VerifiedUserFragmentDoc,
@@ -113,6 +115,10 @@ export function graphql(source: "\n  mutation Login($loginInput: LoginInput!) {\
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation CreateDish($createDishInput: CreateDishInput!) {\n    createDish(input: $createDishInput) {\n      ok\n      error\n      dishId\n    }\n  }\n"): (typeof documents)["\n  mutation CreateDish($createDishInput: CreateDishInput!) {\n    createDish(input: $createDishInput) {\n      ok\n      error\n      dishId\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {\n    createRestaurant(input: $createRestaurantInput) {\n      ok\n      error\n      restaurantId\n    }\n  }\n"): (typeof documents)["\n  mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {\n    createRestaurant(input: $createRestaurantInput) {\n      ok\n      error\n      restaurantId\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -125,7 +131,7 @@ export function graphql(source: "\n  mutation EditRestaurant($editRestaurantInpu
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n      }\n    }\n  }\n"): (typeof documents)["\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n        menu {\n          ...DishParts\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n        menu {\n          ...DishParts\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

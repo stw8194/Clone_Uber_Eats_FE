@@ -97,11 +97,6 @@ export const AddRestaurant = () => {
       CREATE_RESTAURANT_MUTATION,
       {
         onCompleted,
-        refetchQueries: [
-          {
-            query: MY_RESTAURANTS_QUERY,
-          },
-        ],
       }
     );
 
@@ -186,7 +181,7 @@ export const AddRestaurant = () => {
           htmlFor="rawFile"
           className="inline-flex items-center p-3  text-lg bg-lime-600 text-white font-medium rounded-xl shadow cursor-pointer hover:bg-lime-700 transition"
         >
-          📁 이미지 업로드
+          📁 Upload Restaurant cover image
         </label>
         <input
           id="rawFile"

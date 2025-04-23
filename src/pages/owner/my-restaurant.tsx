@@ -16,6 +16,9 @@ export const MY_RESTAURANT_QUERY = graphql(`
       restaurant {
         ...RestaurantParts
         promotedUntil
+        menu {
+          ...DishParts
+        }
       }
     }
   }
@@ -83,11 +86,17 @@ export const MyRestaurant = () => {
         <div>
           <Link
             className="text-white mx-4 bg-gray-800 rounded-lg px-4 py-2"
-            to={""}
+            to={`/restaurant/${id}/add-dish`}
           >
             Add Dish
           </Link>
         </div>
+      </div>
+      <div>
+        {myRestaurantQueryResults?.myRestaurant.restaurant?.menu.length ===
+        0 ? (
+          <h4 className="text-xl mb-5">Please upload a dish</h4>
+        ) : null}
       </div>
     </div>
   );

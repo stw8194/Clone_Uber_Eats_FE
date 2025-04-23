@@ -123,23 +123,23 @@ export const EditRestaurant = () => {
   const onSubmit = async () => {
     try {
       setUploading(true);
+      let coverImg = "";
       const { name, address, categoryName, rawFile } = getValues();
       const file = rawFile[0];
       const formBody = new FormData();
-      const editRestaurantInput = {
-        restaurantId: +id,
-        name,
-        address,
-        categoryName,
-      } as EditRestaurantInput;
       if (file) {
         formBody.append("file", file);
-        const { url: coverImg, error } = await (
+        const { url, error } = await (
           await fetch("http://localhost:4000/uploads", {
             method: "POST",
             body: formBody,
           })
         ).json();
+        if (error) {
+          setUploadError(error);
+          return;
+        }
+        coverImg = url;
         if (myRestaurantQueryResults?.myRestaurant.restaurant?.coverImg) {
           const [_, encodedFileName] =
             myRestaurantQueryResults?.myRestaurant.restaurant?.coverImg.split(
@@ -149,11 +149,6 @@ export const EditRestaurant = () => {
             method: "DELETE",
           });
         }
-        if (error) {
-          setUploadError(error);
-          return;
-        }
-        editRestaurantInput.coverImg = coverImg;
         setImageUrl(coverImg);
       } else {
         myRestaurantQueryResults?.myRestaurant.restaurant?.coverImg &&
@@ -163,7 +158,13 @@ export const EditRestaurant = () => {
       }
       editRestaurantMutation({
         variables: {
-          editRestaurantInput,
+          editRestaurantInput: {
+            restaurantId: +id,
+            name,
+            address,
+            categoryName,
+            ...(coverImg && { coverImg }),
+          },
         },
       });
       history.push(`/restaurant/${id}`);
@@ -223,7 +224,7 @@ export const EditRestaurant = () => {
             htmlFor="rawFile"
             className="inline-flex items-center p-3  text-lg bg-lime-600 text-white font-medium rounded-xl shadow cursor-pointer hover:bg-lime-700 transition"
           >
-            📁 이미지 업로드
+            📁 Upload Restaurant cover image
           </label>
           <input
             id="rawFile"
