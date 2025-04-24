@@ -59,7 +59,7 @@ export const AddRestaurant = () => {
     const {
       createRestaurant: { ok, restaurantId },
     } = data;
-    if (ok) {
+    if (ok && restaurantId) {
       const { name, address, categoryName } = getValues();
       setUploading(false);
       const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });

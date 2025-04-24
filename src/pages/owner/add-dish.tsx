@@ -1,4 +1,4 @@
-import { useApolloClient, useMutation } from "@apollo/client";
+import { gql, useApolloClient, useMutation } from "@apollo/client";
 import { graphql } from "../../gql";
 import {
   CreateDishMutation,
@@ -46,41 +46,51 @@ export const AddDish = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState("");
   const [optionsNumber, setOptionsNumber] = useState<[number, number[]][]>([]);
+  const [options, setOptions] = useState<
+    {
+      name: string;
+      extra: number;
+      choices: { name: string; extra: number }[];
+    }[]
+  >([]);
 
   const onCompleted = (data: CreateDishMutation) => {
     const {
       createDish: { ok, dishId },
     } = data;
-    if (ok) {
+    if (ok && dishId) {
       const { name, price, description } = getValues();
       setUploading(false);
-      const queryResult = client.readQuery({ query: MY_RESTAURANT_QUERY });
-      //   if (queryResult && queryResult.myRestaurant.restaurant) {
-      //     client.writeQuery({
-      //       query: MY_RESTAURANT_QUERY,
-      //       data: {
-      //         myRestaurant: {
-      //           ...queryResult?.myRestaurant,
-      //           restaurant: {
-      //             ...queryResult?.myRestaurant.restaurant,
-      //             id: +id,
-      //             menu: {
-      //               id: dishId,
-      //               name,
-      //               price: +price,
-      //               description,
-      //               choices: {
-      //                 name: "name",
-      //                 extra: 1,
-      //               },
-      //               __typename: "Dish",
-      //             },
-      //             __typename: "Restaurant",
-      //           },
-      //         },
-      //       },
-      //     });
-      //   }
+      const queryResult = client.readQuery({
+        query: MY_RESTAURANT_QUERY,
+        variables: { restaurantId: +id },
+      });
+      if (queryResult && queryResult.myRestaurant.restaurant) {
+        client.writeQuery({
+          query: MY_RESTAURANT_QUERY,
+          data: {
+            myRestaurant: {
+              ...queryResult?.myRestaurant,
+              restaurant: {
+                ...queryResult.myRestaurant.restaurant,
+                menu: [
+                  {
+                    id: dishId,
+                    name,
+                    price: +price,
+                    photo: imageUrl,
+                    description,
+                    options,
+                    __typename: "Dish",
+                  },
+                  ...queryResult.myRestaurant.restaurant.menu,
+                ],
+                __typename: "Restaurant",
+              },
+            },
+          },
+        });
+      }
     }
   };
 
@@ -128,8 +138,11 @@ export const AddDish = () => {
         choices: choices.map((choiceId) => ({
           name: rest[`${choiceId}-choiceName`],
           extra: +rest[`${choiceId}-choiceExtra`],
+          __typename: "DishChoice",
         })),
+        __typename: "DishOption",
       }));
+      setOptions(optionObject);
       createDishMutation({
         variables: {
           createDishInput: {
@@ -138,7 +151,7 @@ export const AddDish = () => {
             price: +price,
             ...(description && { description }),
             ...(photo && { photo }),
-            options: optionObject,
+            options,
           },
         },
       });

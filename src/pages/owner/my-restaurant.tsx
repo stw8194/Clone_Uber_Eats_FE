@@ -7,6 +7,7 @@ import {
 } from "../../gql/graphql";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faPercent } from "@fortawesome/free-solid-svg-icons";
+import { Dish } from "../../components/dish";
 
 export const MY_RESTAURANT_QUERY = graphql(`
   query MyRestaurant($restaurantId: Float!) {
@@ -90,6 +91,25 @@ export const MyRestaurant = () => {
           >
             Add Dish
           </Link>
+          {myRestaurantQueryResults?.myRestaurant.restaurant?.menu.length ===
+          0 ? (
+            <h1 className="text-9xl">EMPTY</h1>
+          ) : (
+            myRestaurantQueryResults?.myRestaurant.restaurant?.menu.map(
+              (menu) => {
+                return (
+                  <Dish
+                    key={menu.id}
+                    id={menu.id + ""}
+                    name={menu.name}
+                    price={menu.price}
+                    description={menu.description}
+                    photo={menu.photo}
+                  />
+                );
+              }
+            )
+          )}
         </div>
       </div>
       <div>
