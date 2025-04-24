@@ -25,6 +25,9 @@ export const Dish: React.FC<IDishProps> = ({
           {name.split(" - ")[0]}
         </h3>
         <h4 className="font-medium truncate overflow-hidden">${price}</h4>
+        <h4 className="font-medium mt-2 text-gray-500 truncate overflow-hidden">
+          {description}
+        </h4>
       </div>
       <div
         className="relative w-36 h-full bg-center bg-cover"
