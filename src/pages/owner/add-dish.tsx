@@ -11,7 +11,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { useState } from "react";
 import { MY_RESTAURANT_QUERY } from "./my-restaurant";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const CREATE_DISH_MUTATION = graphql(`
   mutation CreateDish($createDishInput: CreateDishInput!) {
@@ -28,6 +28,10 @@ interface IFormProps {
   price: string;
   description: string;
   rawFile: FileList;
+  [key: `${number}-optionName`]: string;
+  [key: `${number}-optionExtra`]: string;
+  [key: `${number}-choiceName`]: string;
+  [key: `${number}-choiceExtra`]: string;
 }
 
 interface ICreateDishParams {
@@ -41,6 +45,7 @@ export const AddDish = () => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState("");
+  const [optionsNumber, setOptionsNumber] = useState<[number, number[]][]>([]);
 
   const onCompleted = (data: CreateDishMutation) => {
     const {
@@ -89,6 +94,7 @@ export const AddDish = () => {
   const {
     register,
     setValue,
+    unregister,
     getValues,
     formState: { errors, isValid },
     handleSubmit,
@@ -99,7 +105,7 @@ export const AddDish = () => {
     try {
       setUploading(true);
       let photo = "";
-      const { name, price, description, rawFile } = getValues();
+      const { name, price, description, rawFile, ...rest } = getValues();
       const file = rawFile[0];
       if (file) {
         const formBody = new FormData();
@@ -116,6 +122,14 @@ export const AddDish = () => {
         }
         photo = url;
       }
+      const optionObject = optionsNumber.map(([optionId, choices]) => ({
+        name: rest[`${optionId}-optionName`],
+        extra: +rest[`${optionId}-optionExtra`],
+        choices: choices.map((choiceId) => ({
+          name: rest[`${choiceId}-choiceName`],
+          extra: +rest[`${choiceId}-choiceExtra`],
+        })),
+      }));
       createDishMutation({
         variables: {
           createDishInput: {
@@ -124,6 +138,7 @@ export const AddDish = () => {
             price: +price,
             ...(description && { description }),
             ...(photo && { photo }),
+            options: optionObject,
           },
         },
       });
@@ -132,6 +147,54 @@ export const AddDish = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onAddOptionClick = () => {
+    setOptionsNumber((current) => [...current, [Date.now(), []]]);
+  };
+
+  const onAddChoicesClick = (optionId: number) => {
+    setOptionsNumber((current) =>
+      current.map(([id, choices]) =>
+        id === optionId ? [id, [...choices, Date.now()]] : [id, choices]
+      )
+    );
+    unregister(`${optionId}-optionExtra`);
+  };
+
+  const onDeleteClick = (idToDelete: number) => {
+    optionsNumber.map(([optionId, choiceIds]) => {
+      if (optionId === idToDelete) {
+        choiceIds.map((choiceId) => {
+          unregister(`${choiceId}-choiceName`);
+          unregister(`${choiceId}-choiceExtra`);
+        });
+      }
+    });
+    setOptionsNumber((current) => current.filter((id) => id[0] !== idToDelete));
+    unregister(`${idToDelete}-optionName`);
+    unregister(`${idToDelete}-optionExtra`);
+  };
+
+  const onChoiceDeleteClick = (
+    choiceIdToDelete: number,
+    optionIdToDelete: number
+  ) => {
+    optionsNumber.map(([_, choices]) => {
+      choices.map((choiceId) => {
+        if (choiceId === choiceIdToDelete) {
+          unregister(`${choiceId}-choiceName`);
+          unregister(`${choiceId}-choiceExtra`);
+        }
+      });
+    });
+    setOptionsNumber((current) =>
+      current.map(([optionId, choices]) =>
+        optionId === optionIdToDelete
+          ? [optionId, choices.filter((id) => id !== choiceIdToDelete)]
+          : [optionId, choices]
+      )
+    );
   };
 
   return (
@@ -151,6 +214,7 @@ export const AddDish = () => {
         <input
           {...register("price", { required: "Price is required" })}
           type="number"
+          min={0}
           placeholder="Price"
           className="input"
         />
@@ -216,7 +280,7 @@ export const AddDish = () => {
                 setPreview(null);
                 setValue("rawFile", dataTransfer.files);
               }}
-              className="absolute top-1 right-1 w-4 h-6 hover:cursor-pointer"
+              className="absolute top-1 right-1 w-4 h-6 cursor-pointer"
             >
               <FontAwesomeIcon icon={faTrashCan} />
             </div>
@@ -225,6 +289,86 @@ export const AddDish = () => {
         {errors.rawFile?.message && (
           <FormError errorMessage={errors.rawFile.message} />
         )}
+        <div className="my-10">
+          <div className="font-medium mb-3 text-lg">
+            Dish Options
+            <span
+              onClick={onAddOptionClick}
+              className="cursor-pointer text-white bg-gray-900 py-1 px-2 mt-5 ml-5"
+            >
+              Add Dish Option
+            </span>
+          </div>
+          {optionsNumber.length !== 0 &&
+            optionsNumber.map(([optionId, choices]) => {
+              return (
+                <div key={optionId} className="mt-5">
+                  <div className="flex">
+                    <input
+                      {...register(`${optionId}-optionName`, {
+                        required: "Option name is required",
+                      })}
+                      className="px-4 mr-3 py-2 focus:outline-none border-gray-300 focus:border-gray-500 border-2"
+                      type="text"
+                      placeholder="Option Name"
+                    />
+                    {choices.length === 0 && (
+                      <input
+                        {...register(`${optionId}-optionExtra`)}
+                        defaultValue={0}
+                        className="px-4 py-2 focus:outline-none border-gray-300 focus:border-gray-500 border-2"
+                        type="number"
+                        min={0}
+                        placeholder="Option Extra"
+                      />
+                    )}
+                    <div
+                      onClick={() => onAddChoicesClick(optionId)}
+                      className="w-4 h-6 mt-2 ml-3 cursor-pointer"
+                    >
+                      <FontAwesomeIcon icon={faPlus} size="xl" />
+                    </div>
+                    {choices.map((choiceId) => {
+                      return (
+                        <div key={choiceId}>
+                          <input
+                            {...register(`${choiceId}-choiceName`, {
+                              required: "Option name is required",
+                            })}
+                            className="px-4 mr-3 py-2 focus:outline-none border-gray-300 focus:border-gray-500 border-2"
+                            type="text"
+                            placeholder="Choice Name"
+                          />
+                          <input
+                            {...register(`${choiceId}-choiceExtra`)}
+                            defaultValue={0}
+                            className="px-4 py-2 focus:outline-none border-gray-300 focus:border-gray-500 border-2"
+                            type="number"
+                            min={0}
+                            placeholder="Choice Extra"
+                          />
+                          <div
+                            onClick={() =>
+                              onChoiceDeleteClick(choiceId, optionId)
+                            }
+                            className="w-4 h-6 mt-2 ml-3 cursor-pointer"
+                          >
+                            <FontAwesomeIcon icon={faTrashCan} size="xl" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <div
+                      onClick={() => onDeleteClick(optionId)}
+                      className="w-4 h-6 mt-2 ml-3 cursor-pointer"
+                    >
+                      <FontAwesomeIcon icon={faTrashCan} size="xl" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
         <SubmitButton
           canClick={isValid}
           loading={uploading}

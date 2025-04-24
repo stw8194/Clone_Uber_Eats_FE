@@ -92,7 +92,7 @@ export const Restaurants = () => {
           placeholder="Search restaurants..."
         />
       </form>
-      {allRestaurants && (
+      {allRestaurants.length !== 0 && (
         <div className="container pb-20 mt-8">
           <div className="flex justify-around max-w-sm mx-auto">
             {restaurantsQueryResults?.allCategories.categories?.map(
