@@ -81,36 +81,40 @@ export const MyRestaurant = () => {
         </div>
       </div>
       <div className="w-full flex items-center space-y-5 justify-between">
-        <span className="text-3xl mx-4 font-bold">
+        <span className="text-4xl mx-4 font-bold">
           {myRestaurantQueryResults?.myRestaurant.restaurant?.name}
         </span>
         <div>
-          <Link
-            className="text-white mx-4 bg-gray-800 rounded-lg px-4 py-2"
-            to={`/restaurant/${id}/add-dish`}
-          >
-            Add Dish
-          </Link>
-          {myRestaurantQueryResults?.myRestaurant.restaurant?.menu.length ===
-          0 ? (
-            <h1 className="text-9xl">EMPTY</h1>
-          ) : (
-            myRestaurantQueryResults?.myRestaurant.restaurant?.menu.map(
-              (menu) => {
-                return (
-                  <Dish
-                    key={menu.id}
-                    id={menu.id + ""}
-                    name={menu.name}
-                    price={menu.price}
-                    description={menu.description}
-                    photo={menu.photo}
-                  />
-                );
-              }
-            )
-          )}
+          <div>
+            <Link
+              className="text-white mx-4 bg-gray-800 rounded-lg px-4 py-2"
+              to={`/restaurant/${id}/add-dish`}
+            >
+              Add Dish
+            </Link>
+          </div>
         </div>
+      </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 w-full h-80">
+        {myRestaurantQueryResults?.myRestaurant.restaurant?.menu.length ===
+        0 ? (
+          <h1 className="text-9xl">EMPTY</h1>
+        ) : (
+          myRestaurantQueryResults?.myRestaurant.restaurant?.menu.map(
+            (menu) => {
+              return (
+                <Dish
+                  key={menu.id}
+                  id={menu.id + ""}
+                  name={menu.name}
+                  price={menu.price}
+                  description={menu.description}
+                  photo={menu.photo}
+                />
+              );
+            }
+          )
+        )}
       </div>
       <div>
         {myRestaurantQueryResults?.myRestaurant.restaurant?.menu.length ===

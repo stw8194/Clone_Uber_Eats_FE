@@ -90,6 +90,7 @@ export const AddDish = () => {
             },
           },
         });
+        history.push(`/restaurant/${id}`);
       }
     }
   };
@@ -131,6 +132,7 @@ export const AddDish = () => {
           return;
         }
         photo = url;
+        setImageUrl(photo);
       }
       const optionObject = optionsNumber.map(([optionId, choices]) => ({
         name: rest[`${optionId}-optionName`],
@@ -155,8 +157,6 @@ export const AddDish = () => {
           },
         },
       });
-      setImageUrl(photo);
-      history.push(`/restaurant/${id}`);
     } catch (error) {
       console.log(error);
     }

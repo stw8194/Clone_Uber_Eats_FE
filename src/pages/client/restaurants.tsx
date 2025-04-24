@@ -79,7 +79,7 @@ export const Restaurants = () => {
   };
 
   return (
-    <div className="">
+    <div>
       <title>Home | CUber Eats</title>
       <form
         onSubmit={handleSubmit(onSearchSubmit)}

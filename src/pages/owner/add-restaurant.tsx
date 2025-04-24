@@ -64,6 +64,7 @@ export const AddRestaurant = () => {
       setUploading(false);
       const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });
       if (queryResult && queryResult.myRestaurants.restaurants) {
+        console.log(imageUrl);
         client.writeQuery({
           query: MY_RESTAURANTS_QUERY,
           data: {
@@ -89,6 +90,7 @@ export const AddRestaurant = () => {
           },
         });
       }
+      history.push("/");
     }
   };
 
@@ -125,6 +127,7 @@ export const AddRestaurant = () => {
         setUploadError(error);
         return;
       }
+      setImageUrl(coverImg);
       createRestaurantMutation({
         variables: {
           createRestaurantInput: {
@@ -135,8 +138,6 @@ export const AddRestaurant = () => {
           },
         },
       });
-      setImageUrl(coverImg);
-      history.push("/");
     } catch (error) {
       console.log(error);
     }
