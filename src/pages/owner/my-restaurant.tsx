@@ -8,6 +8,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faPercent } from "@fortawesome/free-solid-svg-icons";
 import { Dish } from "../../components/dish";
+import {
+  VictoryAxis,
+  VictoryChart,
+  VictoryLine,
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer,
+} from "victory";
+import { useState } from "react";
 
 export const MY_RESTAURANT_QUERY = graphql(`
   query MyRestaurant($restaurantId: Float!) {
@@ -20,6 +29,9 @@ export const MY_RESTAURANT_QUERY = graphql(`
         menu {
           ...DishParts
         }
+        orders {
+          ...OrderParts
+        }
       }
     }
   }
@@ -31,6 +43,36 @@ interface IMyRestaurantParams {
 
 export const MyRestaurant = () => {
   const { id } = useParams<IMyRestaurantParams>();
+  const [salesStatistics, setSalesStatistics] = useState<
+    {
+      x: string;
+      y: number;
+    }[]
+  >([]);
+
+  const onCompleted = (data: MyRestaurantQuery) => {
+    const {
+      myRestaurant: { restaurant },
+    } = data;
+    if (restaurant?.orders) {
+      const stats = restaurant.orders.reduce((acc, order) => {
+        const date = new Date(order.createdAt).toLocaleDateString("ko");
+        const exist = acc.find((stat) => stat.x === date);
+        if (exist) {
+          exist.y += order.total || 0;
+        } else {
+          acc.push({ x: date, y: order.total || 0 });
+        }
+        return acc;
+      }, [] as { x: string; y: number }[]);
+      stats.sort((a, b) => {
+        const dateA = new Date(a.x).getTime();
+        const dateB = new Date(b.x).getTime();
+        return dateA - dateB;
+      });
+      setSalesStatistics(stats);
+    }
+  };
   const { data: myRestaurantQueryResults } = useQuery<
     MyRestaurantQuery,
     MyRestaurantQueryVariables
@@ -38,6 +80,7 @@ export const MyRestaurant = () => {
     variables: {
       restaurantId: +id,
     },
+    onCompleted,
   });
 
   return (
@@ -121,6 +164,38 @@ export const MyRestaurant = () => {
         0 ? (
           <h4 className="text-xl mb-5">Please upload a dish</h4>
         ) : null}
+      </div>
+      <div className="mt-20 mb-10">
+        <h4 className="text-center text-2xl font-bold">Sales</h4>
+        <div className="max-w-md w-full mx-auto"></div>
+        <VictoryChart
+          theme={VictoryTheme.material}
+          height={500}
+          width={window.innerWidth}
+          domainPadding={50}
+          containerComponent={<VictoryVoronoiContainer />}
+        >
+          <VictoryLine
+            labels={({ datum }) => `$${datum.y}`}
+            labelComponent={
+              <VictoryTooltip
+                style={{ fontSize: 15 }}
+                renderInPortal
+                dy={-40}
+              />
+            }
+            style={{ data: { strokeWidth: 3 } }}
+            interpolation={"natural"}
+            data={salesStatistics.map((order) => ({
+              x: order.x,
+              y: order.y,
+            }))}
+          />
+          <VictoryAxis
+            style={{ tickLabels: { fontSize: 15 } }}
+            tickFormat={(tick) => new Date(tick).toLocaleDateString("ko")}
+          />
+        </VictoryChart>
       </div>
     </div>
   );

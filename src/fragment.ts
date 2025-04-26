@@ -40,3 +40,11 @@ export const DISH_FRAGMENT = graphql(`
     }
   }
 `);
+
+export const ORDER_FRAGMENT = graphql(`
+  fragment OrderParts on Order {
+    id
+    createdAt
+    total
+  }
+`);
