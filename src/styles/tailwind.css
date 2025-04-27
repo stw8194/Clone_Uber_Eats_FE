@@ -15,3 +15,18 @@
 .link {
   @apply text-lime-600 hover:underline;
 }
+
+@keyframes dropdown {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-dropdown {
+  animation: dropdown 150ms ease-out forwards;
+}
