@@ -148,7 +148,7 @@ export const MyRestaurant = () => {
               return (
                 <Dish
                   key={menu.id}
-                  id={menu.id + ""}
+                  id={menu.id}
                   name={menu.name}
                   price={menu.price}
                   description={menu.description}
