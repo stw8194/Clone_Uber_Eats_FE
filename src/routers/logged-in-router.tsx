@@ -13,6 +13,7 @@ import { AddRestaurant } from "../pages/owner/add-restaurant";
 import { MyRestaurant } from "../pages/owner/my-restaurant";
 import { EditRestaurant } from "../pages/owner/edit-restaurant";
 import { AddDish } from "../pages/owner/add-dish";
+import { Order } from "../pages/user/order";
 
 const clientRoutes = [
   {
@@ -20,7 +21,6 @@ const clientRoutes = [
     exact: true,
     component: <Restaurants />,
   },
-
   {
     path: "/search",
     exact: false,
@@ -32,7 +32,7 @@ const clientRoutes = [
     component: <Category />,
   },
   {
-    path: "/restaurant/:id",
+    path: "/restaurants/:id",
     exact: false,
     component: <Restaurant />,
   },
@@ -50,7 +50,7 @@ const ownerRoutes = [
     component: <AddRestaurant />,
   },
   {
-    path: "/restaurant/:id",
+    path: "/restaurants/:id",
     exact: true,
     component: <MyRestaurant />,
   },
@@ -60,7 +60,7 @@ const ownerRoutes = [
     component: <EditRestaurant />,
   },
   {
-    path: "/restaurant/:id/add-dish",
+    path: "/restaurants/:id/add-dish",
     exact: true,
     component: <AddDish />,
   },
@@ -74,6 +74,10 @@ const commonRoutes = [
   {
     path: "/edit-profile",
     component: <EditProfile />,
+  },
+  {
+    path: "/orders/:orderId",
+    component: <Order />,
   },
 ];
 

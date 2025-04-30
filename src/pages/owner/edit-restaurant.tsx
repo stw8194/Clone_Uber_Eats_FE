@@ -3,7 +3,6 @@ import { graphql } from "../../gql";
 import {
   AllCategoriesQuery,
   AllCategoriesQueryVariables,
-  EditRestaurantInput,
   EditRestaurantMutation,
   EditRestaurantMutationVariables,
 } from "../../gql/graphql";
@@ -167,7 +166,7 @@ export const EditRestaurant = () => {
           },
         },
       });
-      history.push(`/restaurant/${id}`);
+      history.push(`/restaurants/${id}`);
     } catch (error) {
       console.log(error);
     }

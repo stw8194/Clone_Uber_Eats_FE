@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { graphql } from "../../gql";
 import { useMutation, useQuery } from "@apollo/client";
 import {
@@ -30,6 +30,7 @@ export const CREATE_ORDER_MUTATION = graphql(`
     createOrder(input: $createOrderInput) {
       ok
       error
+      orderId
     }
   }
 `);
@@ -41,7 +42,7 @@ interface IRestaurantParams {
 export const Restaurant = () => {
   const { id } = useParams<IRestaurantParams>();
   const [orderItems, setOrderItems] = useState<CreateOrderItemInput[]>([]);
-  const { data: restaurantQueryResults } = useQuery<
+  const { data: restaurantQueryResults, loading } = useQuery<
     RestaurantQuery,
     RestaurantQueryVariables
   >(RESTAURANT_QUERY, {
@@ -50,9 +51,16 @@ export const Restaurant = () => {
     },
   });
 
-  const onCompleted = () => {
-    setOrderItems([]);
-    window.alert("Order Created!");
+  const history = useHistory();
+  const onCompleted = (data: CreateOrderMutation) => {
+    const {
+      createOrder: { ok, orderId },
+    } = data;
+    if (ok) {
+      setOrderItems([]);
+      window.alert("Order Created!");
+      history.push(`/orders/${orderId}`);
+    }
   };
 
   const [createOrderMutation] = useMutation<
@@ -67,22 +75,16 @@ export const Restaurant = () => {
     setOrderItems((current) => [{ dishId, options }, ...current]);
   };
   const createOrder = () => {
-    createOrderMutation({
-      variables: {
-        createOrderInput: {
-          restaurantId: +id,
-          items: orderItems.map((orderItem) => ({
-            dishId: orderItem.dishId,
-            ...(orderItem.options && {
-              options: orderItem.options.map(({ name, choice }) => ({
-                name,
-                ...(choice && { choice }),
-              })),
-            }),
-          })),
+    if (!loading) {
+      createOrderMutation({
+        variables: {
+          createOrderInput: {
+            restaurantId: +id,
+            items: orderItems,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   return (
@@ -104,7 +106,7 @@ export const Restaurant = () => {
         {orderItems.length !== 0 && (
           <span
             onClick={createOrder}
-            className="bg-black hover:bg-gray-800 p-2 text-white rounded-lg"
+            className="bg-black hover:bg-gray-800 p-2 text-white rounded-lg cursor-pointer"
           >
             Checkout
           </span>
