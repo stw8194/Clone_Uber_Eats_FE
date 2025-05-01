@@ -30,7 +30,9 @@ export const MY_RESTAURANT_QUERY = graphql(`
           ...DishParts
         }
         orders {
-          ...OrderParts
+          id
+          createdAt
+          total
         }
       }
     }

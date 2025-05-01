@@ -1,27 +1,29 @@
 import { useParams } from "react-router-dom";
 import { graphql } from "../../gql";
 import { useQuery } from "@apollo/client";
-import { GetOrderQuery, GetOrderQueryVariables } from "../../gql/graphql";
+import {
+  GetOrderQuery,
+  GetOrderQueryVariables,
+  OrderUpdatesSubscription,
+} from "../../gql/graphql";
+import { useEffect } from "react";
 
-const GET_ORDER_Query = graphql(`
+const GET_ORDER_QUERY = graphql(`
   query GetOrder($getOrderInput: GetOrderInput!) {
     getOrder(input: $getOrderInput) {
       ok
       error
       order {
-        id
-        status
-        total
-        driver {
-          email
-        }
-        customer {
-          email
-        }
-        restaurant {
-          name
-        }
+        ...OrderParts
       }
+    }
+  }
+`);
+
+const ORDER_UPDATES_SUBSCRIPTION = graphql(`
+  subscription OrderUpdates($orderUpdatesInput: OrderUpdatesInput!) {
+    orderUpdates(input: $orderUpdatesInput) {
+      ...OrderParts
     }
   }
 `);
@@ -32,16 +34,40 @@ interface IOrderParams {
 
 export const Order = () => {
   const { orderId } = useParams<IOrderParams>();
-  const { data: getOrderQueryResults } = useQuery<
+  const { subscribeToMore, data: getOrderQueryResults } = useQuery<
     GetOrderQuery,
     GetOrderQueryVariables
-  >(GET_ORDER_Query, {
+  >(GET_ORDER_QUERY, {
     variables: {
       getOrderInput: {
         id: +orderId,
       },
     },
   });
+  useEffect(() => {
+    if (getOrderQueryResults?.getOrder.ok) {
+      subscribeToMore({
+        document: ORDER_UPDATES_SUBSCRIPTION,
+        variables: { orderUpdatesInput: { id: +orderId } },
+        updateQuery: (
+          prev,
+          {
+            subscriptionData: { data },
+          }: { subscriptionData: { data: OrderUpdatesSubscription } }
+        ) => {
+          if (!data) return prev;
+          return {
+            getOrder: {
+              ...prev.getOrder,
+              order: {
+                ...data.orderUpdates,
+              },
+            },
+          };
+        },
+      });
+    }
+  }, [getOrderQueryResults, orderId, subscribeToMore]);
 
   return (
     <div className="container mt-32 flex justify-center">
