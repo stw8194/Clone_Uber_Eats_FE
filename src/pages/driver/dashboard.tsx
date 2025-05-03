@@ -63,11 +63,18 @@ export const Dashboard = () => {
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={driverCoords}
-            zoom={15}
+            zoom={18}
             onLoad={onLoad}
             onUnmount={onUnmount}
           >
-            <Marker position={driverCoords} />
+            <Marker
+              position={driverCoords}
+              icon={{
+                url: "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='1'%20height='1'%3E%3C/svg%3E",
+                scaledSize: new window.google.maps.Size(1, 1),
+              }}
+              label={{ text: "🛵", fontSize: "24px" }}
+            />
           </GoogleMap>
         ) : (
           <></>
