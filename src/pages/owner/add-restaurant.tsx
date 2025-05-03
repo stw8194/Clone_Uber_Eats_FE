@@ -49,6 +49,7 @@ export const AddRestaurant = () => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState("");
+  const [address, setAddress] = useState("");
 
   const { data: allCategoriesQueryRestults } = useQuery<
     AllCategoriesQuery,
@@ -64,7 +65,6 @@ export const AddRestaurant = () => {
       setUploading(false);
       const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });
       if (queryResult && queryResult.myRestaurants.restaurants) {
-        console.log(imageUrl);
         client.writeQuery({
           query: MY_RESTAURANTS_QUERY,
           data: {
@@ -157,12 +157,10 @@ export const AddRestaurant = () => {
         {errors.name?.message && (
           <FormError errorMessage={errors.name.message} />
         )}
-        <input
-          {...register("address", { required: "Address is required" })}
-          type="text"
-          placeholder="Address"
-          className="input"
-        />
+        <button {...register("address", { required: "Address is required" })}>
+          Address
+        </button>
+        {address && address}
         {errors.address?.message && (
           <FormError errorMessage={errors.address.message} />
         )}

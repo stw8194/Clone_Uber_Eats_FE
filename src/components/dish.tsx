@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MenuOrder } from "./modal/menu-order";
-import { DishOption, OrderItemChoiceInputType } from "../gql/graphql";
+import { DishOption, OrderItemChoiceInputType, UserRole } from "../gql/graphql";
+import { useMe } from "../hooks/useMe";
 
 interface IDishProps {
   id: number;
@@ -26,6 +27,7 @@ export const Dish: React.FC<IDishProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const { data } = useMe();
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -60,7 +62,7 @@ export const Dish: React.FC<IDishProps> = ({
         className="relative w-36 h-full bg-center bg-cover"
         style={{ backgroundImage: `url(${photo})` }}
       ></div>
-      {isOpen && (
+      {data?.me.role === UserRole.Client && isOpen && (
         <div
           className="fixed inset-0 flex justify-center items-center z-50"
           onClick={(e) => e.stopPropagation()}
