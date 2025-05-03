@@ -140,16 +140,20 @@ export const AddRestaurant = () => {
         return;
       }
       setImageUrl(coverImg);
-      createRestaurantMutation({
-        variables: {
-          createRestaurantInput: {
-            name,
-            address,
-            categoryName,
-            coverImg,
+      if (restaurantCoords) {
+        createRestaurantMutation({
+          variables: {
+            createRestaurantInput: {
+              name,
+              address,
+              categoryName,
+              coverImg,
+              lat: restaurantCoords.lat,
+              lng: restaurantCoords.lng,
+            },
           },
-        },
-      });
+        });
+      }
     } catch (error) {
       console.log(error);
     }

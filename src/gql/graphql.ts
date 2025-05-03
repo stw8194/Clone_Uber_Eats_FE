@@ -120,6 +120,8 @@ export type CreateRestaurantInput = {
   address: Scalars['String']['input'];
   categoryName: Scalars['String']['input'];
   coverImg: Scalars['String']['input'];
+  lat: Scalars['Float']['input'];
+  lng: Scalars['Float']['input'];
   name: Scalars['String']['input'];
 };
 
@@ -224,6 +226,8 @@ export type EditRestaurantInput = {
   address?: InputMaybe<Scalars['String']['input']>;
   categoryName?: InputMaybe<Scalars['String']['input']>;
   coverImg?: InputMaybe<Scalars['String']['input']>;
+  lat?: InputMaybe<Scalars['Float']['input']>;
+  lng?: InputMaybe<Scalars['Float']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   restaurantId: Scalars['Float']['input'];
 };
@@ -512,6 +516,8 @@ export type Restaurant = {
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['Float']['output'];
   isPromoted: Scalars['Boolean']['output'];
+  lat: Scalars['Float']['output'];
+  lng: Scalars['Float']['output'];
   menu: Array<Dish>;
   name: Scalars['String']['output'];
   orders: Array<Order>;
@@ -525,6 +531,8 @@ export type RestaurantInputType = {
   category?: InputMaybe<CategoryInputType>;
   coverImg: Scalars['String']['input'];
   isPromoted?: Scalars['Boolean']['input'];
+  lat: Scalars['Float']['input'];
+  lng: Scalars['Float']['input'];
   menu: Array<DishInputType>;
   name: Scalars['String']['input'];
   orders: Array<OrderInputType>;

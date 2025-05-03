@@ -10,10 +10,11 @@ import { useForm } from "react-hook-form";
 import { SubmitButton } from "../../components/submit-button";
 import { FormError } from "../../components/form-error";
 import { useHistory, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MY_RESTAURANTS_QUERY } from "./my-restaurants";
-import { ALL_CATEGORIES } from "./add-restaurant";
+import { ALL_CATEGORIES, IPosition } from "./add-restaurant";
 import { MY_RESTAURANT_QUERY } from "./my-restaurant";
+import { AddRestaurantAddress } from "../../components/modal/add-restaurant-address";
 
 const EDIT_RESTAURANT_MUTATION = graphql(`
   mutation EditRestaurant($editRestaurantInput: EditRestaurantInput!) {
@@ -42,6 +43,12 @@ export const EditRestaurant = () => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | undefined>(undefined);
   const [imageUrl, setImageUrl] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const [restaurantCoords, setRestaurantCoords] = useState<IPosition | null>(
+    null
+  );
+  const [restaurantAddress, setRestaurantAddress] = useState<string>("");
 
   const { data: allCategoriesQueryRestults } = useQuery<
     AllCategoriesQuery,
@@ -114,6 +121,7 @@ export const EditRestaurant = () => {
   const {
     register,
     getValues,
+    setValue,
     formState: { errors, isValid },
     handleSubmit,
   } = useForm<IFormProps>({ mode: "onChange" });
@@ -171,6 +179,11 @@ export const EditRestaurant = () => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    if (restaurantAddress) {
+      setValue("address", restaurantAddress, { shouldValidate: true });
+    }
+  }, [restaurantAddress, setValue]);
 
   return (
     !loading && (
@@ -190,15 +203,36 @@ export const EditRestaurant = () => {
           {errors.name?.message && (
             <FormError errorMessage={errors.name.message} />
           )}
-          <input
-            {...register("address", { required: "Address is required" })}
-            type="text"
-            placeholder="Address"
-            defaultValue={
-              myRestaurantQueryResults?.myRestaurant.restaurant?.address
-            }
-            className="input"
-          />
+          <div className="flex mb-2 justify-between items-center">
+            <input
+              className="ml-2"
+              {...register("address", {
+                required: "Address is required",
+              })}
+              type="hidden"
+              value={restaurantAddress}
+            />
+            <div className="text-lg font-medium">{restaurantAddress}</div>
+            <button
+              type="button"
+              className="p-2 rounded-xl bg-lime-500 hover:bg-lime-600"
+              onClick={() => {
+                setIsOpen(true);
+              }}
+            >
+              Address
+            </button>
+          </div>
+          {isOpen && (
+            <AddRestaurantAddress
+              ref={modalRef}
+              setIsOpen={setIsOpen}
+              restaurantCoords={restaurantCoords}
+              setRestaurantCoords={setRestaurantCoords}
+              restaurantAddress={restaurantAddress}
+              setRestaurantAddress={setRestaurantAddress}
+            />
+          )}
           {errors.address?.message && (
             <FormError errorMessage={errors.address.message} />
           )}
