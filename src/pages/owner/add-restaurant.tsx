@@ -197,6 +197,7 @@ export const AddRestaurant = () => {
           />
           <div className="text-lg font-medium">{restaurantAddress}</div>
           <button
+            type="button"
             className="p-2 rounded-xl bg-lime-500 hover:bg-lime-600"
             onClick={() => {
               setIsOpen(true);
