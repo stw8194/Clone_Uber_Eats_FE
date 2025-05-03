@@ -42,7 +42,7 @@ export const Dashboard = () => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || "",
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "",
   });
   const onLoad = useCallback(function callback(map: google.maps.Map) {
     const bounds = new window.google.maps.LatLngBounds(driverCoords);
