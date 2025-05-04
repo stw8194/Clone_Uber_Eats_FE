@@ -92,7 +92,7 @@ export const AddRestaurantAddress = forwardRef<
         {
           address: getValues("address"),
         },
-        (results, status) => {
+        (results) => {
           if (results) {
             const { lat, lng } = results[0].geometry.location;
             setRestaurantCoords({ lat: lat(), lng: lng() });
@@ -110,7 +110,7 @@ export const AddRestaurantAddress = forwardRef<
         {
           location: restaurantCoords,
         },
-        (results, status) => {
+        (results) => {
           if (results) {
             setRestaurantAddress(results[0].formatted_address);
           }
