@@ -90,7 +90,7 @@ export const AddDish = () => {
             },
           },
         });
-        history.push(`/restaurant/${id}`);
+        history.push(`/restaurants/${id}`);
       }
     }
   };

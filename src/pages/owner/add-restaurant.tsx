@@ -10,8 +10,9 @@ import { useForm } from "react-hook-form";
 import { SubmitButton } from "../../components/submit-button";
 import { FormError } from "../../components/form-error";
 import { useHistory } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MY_RESTAURANTS_QUERY } from "./my-restaurants";
+import { AddRestaurantAddress } from "../../components/modal/add-restaurant-address";
 
 const CREATE_RESTAURANT_MUTATION = graphql(`
   mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {
@@ -43,12 +44,23 @@ interface IFormProps {
   rawFile: FileList;
 }
 
+export interface IPosition {
+  lat: number;
+  lng: number;
+}
+
 export const AddRestaurant = () => {
   const client = useApolloClient();
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const [restaurantCoords, setRestaurantCoords] = useState<IPosition | null>(
+    null
+  );
+  const [restaurantAddress, setRestaurantAddress] = useState<string>("");
 
   const { data: allCategoriesQueryRestults } = useQuery<
     AllCategoriesQuery,
@@ -64,7 +76,6 @@ export const AddRestaurant = () => {
       setUploading(false);
       const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });
       if (queryResult && queryResult.myRestaurants.restaurants) {
-        console.log(imageUrl);
         client.writeQuery({
           query: MY_RESTAURANTS_QUERY,
           data: {
@@ -105,6 +116,7 @@ export const AddRestaurant = () => {
   const {
     register,
     getValues,
+    setValue,
     formState: { errors, isValid },
     handleSubmit,
   } = useForm<IFormProps>({ mode: "onChange" });
@@ -128,20 +140,41 @@ export const AddRestaurant = () => {
         return;
       }
       setImageUrl(coverImg);
-      createRestaurantMutation({
-        variables: {
-          createRestaurantInput: {
-            name,
-            address,
-            categoryName,
-            coverImg,
+      if (restaurantCoords) {
+        createRestaurantMutation({
+          variables: {
+            createRestaurantInput: {
+              name,
+              address,
+              categoryName,
+              coverImg,
+              lat: restaurantCoords.lat,
+              lng: restaurantCoords.lng,
+            },
           },
-        },
-      });
+        });
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  useEffect(() => {
+    if (restaurantAddress) {
+      setValue("address", restaurantAddress, { shouldValidate: true });
+    }
+  }, [restaurantAddress, setValue]);
 
   return (
     <div className="container">
@@ -157,12 +190,36 @@ export const AddRestaurant = () => {
         {errors.name?.message && (
           <FormError errorMessage={errors.name.message} />
         )}
-        <input
-          {...register("address", { required: "Address is required" })}
-          type="text"
-          placeholder="Address"
-          className="input"
-        />
+        <div className="flex mb-2 justify-between items-center">
+          <input
+            className="ml-2"
+            {...register("address", {
+              required: "Address is required",
+            })}
+            type="hidden"
+            value={restaurantAddress}
+          />
+          <div className="text-lg font-medium">{restaurantAddress}</div>
+          <button
+            type="button"
+            className="p-2 rounded-xl bg-lime-500 hover:bg-lime-600"
+            onClick={() => {
+              setIsOpen(true);
+            }}
+          >
+            Address
+          </button>
+        </div>
+        {isOpen && (
+          <AddRestaurantAddress
+            ref={modalRef}
+            setIsOpen={setIsOpen}
+            restaurantCoords={restaurantCoords}
+            setRestaurantCoords={setRestaurantCoords}
+            restaurantAddress={restaurantAddress}
+            setRestaurantAddress={setRestaurantAddress}
+          />
+        )}
         {errors.address?.message && (
           <FormError errorMessage={errors.address.message} />
         )}

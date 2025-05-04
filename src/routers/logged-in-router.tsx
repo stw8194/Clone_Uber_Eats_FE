@@ -13,6 +13,9 @@ import { AddRestaurant } from "../pages/owner/add-restaurant";
 import { MyRestaurant } from "../pages/owner/my-restaurant";
 import { EditRestaurant } from "../pages/owner/edit-restaurant";
 import { AddDish } from "../pages/owner/add-dish";
+import { Order } from "../pages/user/order";
+import { UserRole } from "../gql/graphql";
+import { Dashboard } from "../pages/driver/dashboard";
 
 const clientRoutes = [
   {
@@ -20,7 +23,6 @@ const clientRoutes = [
     exact: true,
     component: <Restaurants />,
   },
-
   {
     path: "/search",
     exact: false,
@@ -32,7 +34,7 @@ const clientRoutes = [
     component: <Category />,
   },
   {
-    path: "/restaurant/:id",
+    path: "/restaurants/:id",
     exact: false,
     component: <Restaurant />,
   },
@@ -50,7 +52,7 @@ const ownerRoutes = [
     component: <AddRestaurant />,
   },
   {
-    path: "/restaurant/:id",
+    path: "/restaurants/:id",
     exact: true,
     component: <MyRestaurant />,
   },
@@ -60,9 +62,17 @@ const ownerRoutes = [
     component: <EditRestaurant />,
   },
   {
-    path: "/restaurant/:id/add-dish",
+    path: "/restaurants/:id/add-dish",
     exact: true,
     component: <AddDish />,
+  },
+];
+
+const driverRoutes = [
+  {
+    path: "/",
+    exact: true,
+    component: <Dashboard />,
   },
 ];
 
@@ -74,6 +84,10 @@ const commonRoutes = [
   {
     path: "/edit-profile",
     component: <EditProfile />,
+  },
+  {
+    path: "/orders/:orderId",
+    component: <Order />,
   },
 ];
 
@@ -90,8 +104,20 @@ export const LoggedInRouter = () => {
     <Router>
       <Header />
       <Switch>
-        {data.me.role === "Client" &&
+        {data.me.role === UserRole.Client &&
           clientRoutes.map((route) => (
+            <Route key={route.path} path={route.path} exact={route.exact}>
+              {route.component}
+            </Route>
+          ))}
+        {data.me.role === UserRole.Owner &&
+          ownerRoutes.map((route) => (
+            <Route key={route.path} path={route.path} exact={route.exact}>
+              {route.component}
+            </Route>
+          ))}
+        {data.me.role === UserRole.Delivery &&
+          driverRoutes.map((route) => (
             <Route key={route.path} path={route.path} exact={route.exact}>
               {route.component}
             </Route>
@@ -101,12 +127,6 @@ export const LoggedInRouter = () => {
             {route.component}
           </Route>
         ))}
-        {data.me.role === "Owner" &&
-          ownerRoutes.map((route) => (
-            <Route key={route.path} path={route.path} exact={route.exact}>
-              {route.component}
-            </Route>
-          ))}
         <Route>
           <NotFound />
         </Route>

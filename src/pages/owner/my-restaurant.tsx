@@ -30,7 +30,9 @@ export const MY_RESTAURANT_QUERY = graphql(`
           ...DishParts
         }
         orders {
-          ...OrderParts
+          id
+          createdAt
+          total
         }
       }
     }
@@ -131,7 +133,7 @@ export const MyRestaurant = () => {
           <div>
             <Link
               className="text-white mx-4 bg-gray-800 rounded-lg px-4 py-2"
-              to={`/restaurant/${id}/add-dish`}
+              to={`/restaurants/${id}/add-dish`}
             >
               Add Dish
             </Link>
@@ -148,7 +150,7 @@ export const MyRestaurant = () => {
               return (
                 <Dish
                   key={menu.id}
-                  id={menu.id + ""}
+                  id={menu.id}
                   name={menu.name}
                   price={menu.price}
                   description={menu.description}
