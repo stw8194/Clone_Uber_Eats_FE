@@ -79,24 +79,6 @@ export const AddRestaurantAddress = forwardRef<
       setMap(null);
     }, []);
 
-    useEffect(() => {
-      if (!isLoaded) return;
-      setRestaurantAddress(getValues("address"));
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode(
-        {
-          address: restaurantAddress,
-        },
-        (results, status) => {
-          if (results) {
-            const { lat, lng } = results[0].geometry.location;
-            setRestaurantCoords({ lat: lat(), lng: lng() });
-            setRestaurantAddress(results[0].formatted_address);
-          }
-        }
-      );
-    }, [getValues("address")]);
-
     const onClick = (e: google.maps.MapMouseEvent) => {
       if (e.latLng) {
         const { lat, lng } = e.latLng;
@@ -104,7 +86,24 @@ export const AddRestaurantAddress = forwardRef<
       }
     };
 
-    const onButtonClick = () => {
+    const onSearchClick = (map: google.maps.Map) => {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode(
+        {
+          address: getValues("address"),
+        },
+        (results, status) => {
+          if (results) {
+            const { lat, lng } = results[0].geometry.location;
+            setRestaurantCoords({ lat: lat(), lng: lng() });
+            setRestaurantAddress(results[0].formatted_address);
+            map.panTo(new google.maps.LatLng(lat(), lng()));
+          }
+        }
+      );
+    };
+
+    const onConfirmClick = () => {
       const geocoder = new google.maps.Geocoder();
       setIsOpen(false);
       geocoder.geocode(
@@ -131,7 +130,13 @@ export const AddRestaurantAddress = forwardRef<
                 className="p-3 w-full mb-2 rounded-xl border-2 bg-white text-lg focus:outline-none focus:border-gray-500 transition-colors font-light border-gray-200"
               />
               <button
-                onClick={onButtonClick}
+                onClick={() => map && onSearchClick(map)}
+                className="bg-lime-500 hover:bg-lime-600 ml-2 mb-2 cursor-pointer text-white font-semibold p-4 rounded-xl"
+              >
+                Search
+              </button>
+              <button
+                onClick={onConfirmClick}
                 className="bg-lime-500 hover:bg-lime-600 ml-2 mb-2 cursor-pointer text-white font-semibold p-4 rounded-xl"
               >
                 Confirm

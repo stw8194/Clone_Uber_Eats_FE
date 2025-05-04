@@ -133,7 +133,7 @@ export const MyRestaurant = () => {
           <div>
             <Link
               className="text-white mx-4 bg-gray-800 rounded-lg px-4 py-2"
-              to={`/restaurant/${id}/add-dish`}
+              to={`/restaurants/${id}/add-dish`}
             >
               Add Dish
             </Link>

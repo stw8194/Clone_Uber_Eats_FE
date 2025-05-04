@@ -45,9 +45,7 @@ export const Dashboard = () => {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "",
   });
   const onLoad = useCallback(function callback(map: google.maps.Map) {
-    const bounds = new window.google.maps.LatLngBounds(driverCoords);
     map.panTo(new google.maps.LatLng(driverCoords.lat, driverCoords.lng));
-    map.fitBounds(bounds);
 
     setMap(map);
   }, []);
