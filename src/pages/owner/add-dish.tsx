@@ -140,9 +140,7 @@ export const AddDish = () => {
         choices: choices.map((choiceId) => ({
           name: rest[`${choiceId}-choiceName`],
           extra: +rest[`${choiceId}-choiceExtra`],
-          __typename: "DishChoice",
         })),
-        __typename: "DishOption",
       }));
       setOptions(optionObject);
       createDishMutation({
@@ -157,6 +155,7 @@ export const AddDish = () => {
           },
         },
       });
+      history.push(`/restaurant:/${id}`);
     } catch (error) {
       console.log(error);
     }

@@ -1,12 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo from "../images/logo.svg";
-import { faCartShopping, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBell,
+  faCartShopping,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useMe } from "../hooks/useMe";
 import { useEffect, useRef, useState } from "react";
 import { authTokenVar, isLoggedInVar } from "../apollo";
 import { LOCALSTORAGE_TOKEN } from "../constants";
 import { useApolloClient } from "@apollo/client";
+import { UserRole } from "../gql/graphql";
 // import { Cart } from "./modal/cart";
 
 export const Header: React.FC = () => {
@@ -65,13 +70,20 @@ export const Header: React.FC = () => {
                 />
               )} */}
             </span>
-            <span
-              className="relative text-xs"
-              onClick={() => setIsOpen((current) => !current)}
-            >
+            <span className="relative text-xs">
+              {data?.me.role === UserRole.Owner && (
+                <div className="relative inline-block mr-5">
+                  <FontAwesomeIcon
+                    icon={faBell}
+                    className="text-xl cursor-pointer"
+                  />
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full w-2.5 h-2.5"></span>
+                </div>
+              )}
               <FontAwesomeIcon
                 icon={faUser}
-                className="text-xl cursor-pointer rounded-full"
+                onClick={() => setIsOpen((current) => !current)}
+                className="text-xl cursor-pointer"
               />
               {isOpen && (
                 <div
