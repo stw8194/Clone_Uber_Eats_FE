@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { MenuOrder } from "./modal/menu-order";
 import { DishOption, OrderItemChoiceInputType, UserRole } from "../gql/graphql";
 import { useMe } from "../hooks/useMe";
+import { useModalRef } from "../hooks/useModalRef";
 
 interface IDishProps {
   id: number;
@@ -26,19 +27,8 @@ export const Dish: React.FC<IDishProps> = ({
   AddItemToOrder,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalRef = useModalRef(setIsOpen);
   const { data } = useMe();
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <div

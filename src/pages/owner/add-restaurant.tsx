@@ -10,9 +10,10 @@ import { useForm } from "react-hook-form";
 import { SubmitButton } from "../../components/submit-button";
 import { FormError } from "../../components/form-error";
 import { useHistory } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MY_RESTAURANTS_QUERY } from "./my-restaurants";
 import { AddRestaurantAddress } from "../../components/modal/add-restaurant-address";
+import { useModalRef } from "../../hooks/useModalRef";
 
 const CREATE_RESTAURANT_MUTATION = graphql(`
   mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {
@@ -56,7 +57,7 @@ export const AddRestaurant = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalRef = useModalRef(setIsOpen);
   const [restaurantCoords, setRestaurantCoords] = useState<IPosition | null>(
     null
   );
@@ -159,17 +160,6 @@ export const AddRestaurant = () => {
     }
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   useEffect(() => {
     if (restaurantAddress) {
       setValue("address", restaurantAddress, { shouldValidate: true });

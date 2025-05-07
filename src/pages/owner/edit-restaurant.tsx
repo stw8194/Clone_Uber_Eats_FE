@@ -10,11 +10,12 @@ import { useForm } from "react-hook-form";
 import { SubmitButton } from "../../components/submit-button";
 import { FormError } from "../../components/form-error";
 import { useHistory, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { MY_RESTAURANTS_QUERY } from "./my-restaurants";
 import { ALL_CATEGORIES, IPosition } from "./add-restaurant";
 import { MY_RESTAURANT_QUERY } from "./my-restaurant";
 import { AddRestaurantAddress } from "../../components/modal/add-restaurant-address";
+import { useModalRef } from "../../hooks/useModalRef";
 
 const EDIT_RESTAURANT_MUTATION = graphql(`
   mutation EditRestaurant($editRestaurantInput: EditRestaurantInput!) {
@@ -44,7 +45,7 @@ export const EditRestaurant = () => {
   const [preview, setPreview] = useState<string | undefined>(undefined);
   const [imageUrl, setImageUrl] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalRef = useModalRef(setIsOpen);
   const [restaurantCoords, setRestaurantCoords] = useState<IPosition | null>(
     null
   );
@@ -75,7 +76,9 @@ export const EditRestaurant = () => {
     if (ok) {
       const { name, address, categoryName } = getValues();
       setUploading(false);
-      const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });
+      const queryResult = client.readQuery({
+        query: MY_RESTAURANTS_QUERY,
+      });
       if (queryResult && queryResult.myRestaurants.restaurants) {
         client.writeQuery({
           query: MY_RESTAURANTS_QUERY,

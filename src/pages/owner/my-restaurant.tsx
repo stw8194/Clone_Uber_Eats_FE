@@ -17,6 +17,8 @@ import {
   VictoryVoronoiContainer,
 } from "victory";
 import { useState } from "react";
+import { NewOrders } from "../../components/modal/new_orders";
+import { useModalRef } from "../../hooks/useModalRef";
 
 export const MY_RESTAURANT_QUERY = graphql(`
   query MyRestaurant($restaurantId: Float!) {
@@ -51,6 +53,8 @@ export const MyRestaurant = () => {
       y: number;
     }[]
   >([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const modalRef = useModalRef(setIsOpen);
 
   const onCompleted = (data: MyRestaurantQuery) => {
     const {
@@ -126,13 +130,25 @@ export const MyRestaurant = () => {
         </div>
       </div>
       <div className="w-full flex items-center space-y-5 justify-between">
-        <span className="text-4xl mx-4 font-bold">
-          {myRestaurantQueryResults?.myRestaurant.restaurant?.name}
-        </span>
+        <div className="items-center">
+          <span className="text-4xl mx-4 font-bold">
+            {myRestaurantQueryResults?.myRestaurant.restaurant?.name}
+          </span>
+          <button
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            type="button"
+            className="text-white mx-2 bg-gray-800 rounded-lg px-4 py-2 inline-flex items-center justify-center"
+          >
+            Order List
+          </button>
+        </div>
         <div>
           <div>
+            {isOpen && <NewOrders ref={modalRef} setIsOpen={setIsOpen} />}
             <Link
-              className="text-white mx-4 bg-gray-800 rounded-lg px-4 py-2"
+              className="text-white bg-gray-800 rounded-lg px-4 py-2 inline-flex items-center justify-center"
               to={`/restaurants/${id}/add-dish`}
             >
               Add Dish
@@ -148,14 +164,18 @@ export const MyRestaurant = () => {
           myRestaurantQueryResults?.myRestaurant.restaurant?.menu.map(
             (menu) => {
               return (
-                <Dish
+                <Link
                   key={menu.id}
-                  id={menu.id}
-                  name={menu.name}
-                  price={menu.price}
-                  description={menu.description}
-                  photo={menu.photo}
-                />
+                  to={`/restaurants/${id}/edit-dish/${menu.id}`}
+                >
+                  <Dish
+                    id={menu.id}
+                    name={menu.name}
+                    price={menu.price}
+                    description={menu.description}
+                    photo={menu.photo}
+                  />
+                </Link>
               );
             }
           )

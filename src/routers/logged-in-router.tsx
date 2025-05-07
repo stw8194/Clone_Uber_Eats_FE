@@ -14,8 +14,30 @@ import { MyRestaurant } from "../pages/owner/my-restaurant";
 import { EditRestaurant } from "../pages/owner/edit-restaurant";
 import { AddDish } from "../pages/owner/add-dish";
 import { Order } from "../pages/user/order";
-import { UserRole } from "../gql/graphql";
+import {
+  GetOrdersQuery,
+  GetOrdersQueryVariables,
+  OrderStatus,
+  PendingOrdersSubscription,
+  PendingOrdersSubscriptionVariables,
+  UserRole,
+} from "../gql/graphql";
 import { Dashboard } from "../pages/driver/dashboard";
+import { graphql } from "../gql";
+import { useQuery, useSubscription } from "@apollo/client";
+import { NewOrder } from "../components/modal/new_order";
+import { useEffect, useState } from "react";
+import { EditDish } from "../pages/owner/edit-dish";
+import { pendingCountVar } from "../apollo";
+import { GET_ORDERS_QUERY } from "../components/modal/new_orders";
+
+const PENDING_ORDERS_SUBSCRIPTION = graphql(`
+  subscription PendingOrders {
+    pendingOrders {
+      ...OrderParts
+    }
+  }
+`);
 
 const clientRoutes = [
   {
@@ -66,6 +88,11 @@ const ownerRoutes = [
     exact: true,
     component: <AddDish />,
   },
+  {
+    path: "/restaurants/:restaurantId/edit-dish/:dishId",
+    exact: true,
+    component: <EditDish />,
+  },
 ];
 
 const driverRoutes = [
@@ -93,6 +120,35 @@ const commonRoutes = [
 
 export const LoggedInRouter = () => {
   const { data, loading, error } = useMe();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { data: pendingOrdersSubscriptionResults } = useSubscription<
+    PendingOrdersSubscription,
+    PendingOrdersSubscriptionVariables
+  >(PENDING_ORDERS_SUBSCRIPTION, {
+    skip: data?.me.role !== UserRole.Owner,
+  });
+  const { data: getOrdersQueryResults } = useQuery<
+    GetOrdersQuery,
+    GetOrdersQueryVariables
+  >(GET_ORDERS_QUERY, {
+    variables: {
+      getOrdersInput: {
+        status: [OrderStatus.Pending],
+      },
+    },
+    skip: data?.me.role !== UserRole.Owner,
+  });
+  useEffect(() => {
+    pendingCountVar(getOrdersQueryResults?.getOrders.orders?.length);
+  }, [getOrdersQueryResults]);
+  useEffect(() => {
+    if (pendingOrdersSubscriptionResults) {
+      setIsOpen(true);
+      pendingCountVar(pendingCountVar() + 1);
+    }
+  }, [pendingOrdersSubscriptionResults]);
+
   if (!data || loading || error) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -114,6 +170,14 @@ export const LoggedInRouter = () => {
           ownerRoutes.map((route) => (
             <Route key={route.path} path={route.path} exact={route.exact}>
               {route.component}
+              {data.me.role === UserRole.Owner &&
+                pendingOrdersSubscriptionResults &&
+                isOpen && (
+                  <NewOrder
+                    setIsOpen={setIsOpen}
+                    order={pendingOrdersSubscriptionResults}
+                  />
+                )}
             </Route>
           ))}
         {data.me.role === UserRole.Delivery &&

@@ -14,6 +14,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  mutation EditOrder($editOrderInput: EditOrderInput!) {\n    editOrder(input: $editOrderInput) {\n      ok\n      error\n    }\n  }\n": typeof types.EditOrderDocument,
+    "\n  query GetOrders($getOrdersInput: GetOrdersInput!) {\n    getOrders(input: $getOrdersInput) {\n      ok\n      error\n      orders {\n        ...OrderParts\n      }\n    }\n  }\n": typeof types.GetOrdersDocument,
     "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n": typeof types.RestaurantPartsFragmentDoc,
     "\n  fragment CategoryParts on Category {\n    id\n    name\n    coverImg\n    slug\n    restaurantCount\n  }\n": typeof types.CategoryPartsFragmentDoc,
     "\n  fragment DishParts on Dish {\n    id\n    name\n    price\n    photo\n    description\n    options {\n      name\n      extra\n      choices {\n        name\n        extra\n      }\n    }\n  }\n": typeof types.DishPartsFragmentDoc,
@@ -29,6 +31,8 @@ type Documents = {
     "\n  mutation CreateDish($createDishInput: CreateDishInput!) {\n    createDish(input: $createDishInput) {\n      ok\n      error\n      dishId\n    }\n  }\n": typeof types.CreateDishDocument,
     "\n  mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {\n    createRestaurant(input: $createRestaurantInput) {\n      ok\n      error\n      restaurantId\n    }\n  }\n": typeof types.CreateRestaurantDocument,
     "\n  query allCategories {\n    allCategories {\n      ok\n      error\n      categories {\n        name\n        coverImg\n      }\n    }\n  }\n": typeof types.AllCategoriesDocument,
+    "\n  mutation EditDish($editDishInput: EditDishInput!) {\n    editDish(input: $editDishInput) {\n      ok\n      error\n    }\n  }\n": typeof types.EditDishDocument,
+    "\n  query MyDish($myDishInput: MyDishInput!) {\n    myDish(input: $myDishInput) {\n      ok\n      error\n      dish {\n        ...DishParts\n      }\n    }\n  }\n": typeof types.MyDishDocument,
     "\n  mutation EditRestaurant($editRestaurantInput: EditRestaurantInput!) {\n    editRestaurant(input: $editRestaurantInput) {\n      ok\n      error\n    }\n  }\n": typeof types.EditRestaurantDocument,
     "\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n        menu {\n          ...DishParts\n        }\n        orders {\n          id\n          createdAt\n          total\n        }\n      }\n    }\n  }\n": typeof types.MyRestaurantDocument,
     "\n  query MyRestaurants {\n    myRestaurants {\n      ok\n      error\n      restaurants {\n        ...RestaurantParts\n        promotedUntil\n      }\n    }\n  }\n": typeof types.MyRestaurantsDocument,
@@ -38,8 +42,11 @@ type Documents = {
     "\n            fragment EditedUser on User {\n              verified\n              email\n            }\n          ": typeof types.EditedUserFragmentDoc,
     "\n  query GetOrder($getOrderInput: GetOrderInput!) {\n    getOrder(input: $getOrderInput) {\n      ok\n      error\n      order {\n        ...OrderParts\n      }\n    }\n  }\n": typeof types.GetOrderDocument,
     "\n  subscription OrderUpdates($orderUpdatesInput: OrderUpdatesInput!) {\n    orderUpdates(input: $orderUpdatesInput) {\n      ...OrderParts\n    }\n  }\n": typeof types.OrderUpdatesDocument,
+    "\n  subscription PendingOrders {\n    pendingOrders {\n      ...OrderParts\n    }\n  }\n": typeof types.PendingOrdersDocument,
 };
 const documents: Documents = {
+    "\n  mutation EditOrder($editOrderInput: EditOrderInput!) {\n    editOrder(input: $editOrderInput) {\n      ok\n      error\n    }\n  }\n": types.EditOrderDocument,
+    "\n  query GetOrders($getOrdersInput: GetOrdersInput!) {\n    getOrders(input: $getOrdersInput) {\n      ok\n      error\n      orders {\n        ...OrderParts\n      }\n    }\n  }\n": types.GetOrdersDocument,
     "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n": types.RestaurantPartsFragmentDoc,
     "\n  fragment CategoryParts on Category {\n    id\n    name\n    coverImg\n    slug\n    restaurantCount\n  }\n": types.CategoryPartsFragmentDoc,
     "\n  fragment DishParts on Dish {\n    id\n    name\n    price\n    photo\n    description\n    options {\n      name\n      extra\n      choices {\n        name\n        extra\n      }\n    }\n  }\n": types.DishPartsFragmentDoc,
@@ -55,6 +62,8 @@ const documents: Documents = {
     "\n  mutation CreateDish($createDishInput: CreateDishInput!) {\n    createDish(input: $createDishInput) {\n      ok\n      error\n      dishId\n    }\n  }\n": types.CreateDishDocument,
     "\n  mutation CreateRestaurant($createRestaurantInput: CreateRestaurantInput!) {\n    createRestaurant(input: $createRestaurantInput) {\n      ok\n      error\n      restaurantId\n    }\n  }\n": types.CreateRestaurantDocument,
     "\n  query allCategories {\n    allCategories {\n      ok\n      error\n      categories {\n        name\n        coverImg\n      }\n    }\n  }\n": types.AllCategoriesDocument,
+    "\n  mutation EditDish($editDishInput: EditDishInput!) {\n    editDish(input: $editDishInput) {\n      ok\n      error\n    }\n  }\n": types.EditDishDocument,
+    "\n  query MyDish($myDishInput: MyDishInput!) {\n    myDish(input: $myDishInput) {\n      ok\n      error\n      dish {\n        ...DishParts\n      }\n    }\n  }\n": types.MyDishDocument,
     "\n  mutation EditRestaurant($editRestaurantInput: EditRestaurantInput!) {\n    editRestaurant(input: $editRestaurantInput) {\n      ok\n      error\n    }\n  }\n": types.EditRestaurantDocument,
     "\n  query MyRestaurant($restaurantId: Float!) {\n    myRestaurant(restaurantId: $restaurantId) {\n      ok\n      error\n      restaurant {\n        ...RestaurantParts\n        promotedUntil\n        menu {\n          ...DishParts\n        }\n        orders {\n          id\n          createdAt\n          total\n        }\n      }\n    }\n  }\n": types.MyRestaurantDocument,
     "\n  query MyRestaurants {\n    myRestaurants {\n      ok\n      error\n      restaurants {\n        ...RestaurantParts\n        promotedUntil\n      }\n    }\n  }\n": types.MyRestaurantsDocument,
@@ -64,6 +73,7 @@ const documents: Documents = {
     "\n            fragment EditedUser on User {\n              verified\n              email\n            }\n          ": types.EditedUserFragmentDoc,
     "\n  query GetOrder($getOrderInput: GetOrderInput!) {\n    getOrder(input: $getOrderInput) {\n      ok\n      error\n      order {\n        ...OrderParts\n      }\n    }\n  }\n": types.GetOrderDocument,
     "\n  subscription OrderUpdates($orderUpdatesInput: OrderUpdatesInput!) {\n    orderUpdates(input: $orderUpdatesInput) {\n      ...OrderParts\n    }\n  }\n": types.OrderUpdatesDocument,
+    "\n  subscription PendingOrders {\n    pendingOrders {\n      ...OrderParts\n    }\n  }\n": types.PendingOrdersDocument,
 };
 
 /**
@@ -80,6 +90,14 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation EditOrder($editOrderInput: EditOrderInput!) {\n    editOrder(input: $editOrderInput) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation EditOrder($editOrderInput: EditOrderInput!) {\n    editOrder(input: $editOrderInput) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetOrders($getOrdersInput: GetOrdersInput!) {\n    getOrders(input: $getOrdersInput) {\n      ok\n      error\n      orders {\n        ...OrderParts\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetOrders($getOrdersInput: GetOrdersInput!) {\n    getOrders(input: $getOrdersInput) {\n      ok\n      error\n      orders {\n        ...OrderParts\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -143,6 +161,14 @@ export function graphql(source: "\n  query allCategories {\n    allCategories {\
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation EditDish($editDishInput: EditDishInput!) {\n    editDish(input: $editDishInput) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation EditDish($editDishInput: EditDishInput!) {\n    editDish(input: $editDishInput) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query MyDish($myDishInput: MyDishInput!) {\n    myDish(input: $myDishInput) {\n      ok\n      error\n      dish {\n        ...DishParts\n      }\n    }\n  }\n"): (typeof documents)["\n  query MyDish($myDishInput: MyDishInput!) {\n    myDish(input: $myDishInput) {\n      ok\n      error\n      dish {\n        ...DishParts\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation EditRestaurant($editRestaurantInput: EditRestaurantInput!) {\n    editRestaurant(input: $editRestaurantInput) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation EditRestaurant($editRestaurantInput: EditRestaurantInput!) {\n    editRestaurant(input: $editRestaurantInput) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -176,6 +202,10 @@ export function graphql(source: "\n  query GetOrder($getOrderInput: GetOrderInpu
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  subscription OrderUpdates($orderUpdatesInput: OrderUpdatesInput!) {\n    orderUpdates(input: $orderUpdatesInput) {\n      ...OrderParts\n    }\n  }\n"): (typeof documents)["\n  subscription OrderUpdates($orderUpdatesInput: OrderUpdatesInput!) {\n    orderUpdates(input: $orderUpdatesInput) {\n      ...OrderParts\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  subscription PendingOrders {\n    pendingOrders {\n      ...OrderParts\n    }\n  }\n"): (typeof documents)["\n  subscription PendingOrders {\n    pendingOrders {\n      ...OrderParts\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

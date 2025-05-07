@@ -44,7 +44,6 @@ export const EditProfile = () => {
     const {
       editProfile: { ok },
     } = data;
-    const { email, password } = getValues();
     if (ok && userData) {
       const {
         me: { email: prevEmail, id },
@@ -68,13 +67,12 @@ export const EditProfile = () => {
       history.push("/");
     }
   };
-  const [editProfileMutaion, { data: editProfileMutationResult, loading }] =
-    useMutation<EditProfileMutation, EditProfileMutationVariables>(
-      EDIT_PROFILE_MUTATION,
-      {
-        onCompleted,
-      }
-    );
+  const [editProfileMutaion, { loading }] = useMutation<
+    EditProfileMutation,
+    EditProfileMutationVariables
+  >(EDIT_PROFILE_MUTATION, {
+    onCompleted,
+  });
 
   const onSubmit = () => {
     const { email, password } = getValues();
