@@ -559,6 +559,9 @@
   .w-2\.5 {
     width: calc(var(--spacing) * 2.5);
   }
+  .w-2\/5 {
+    width: calc(2/5 * 100%);
+  }
   .w-3 {
     width: calc(var(--spacing) * 3);
   }
@@ -740,6 +743,9 @@
   }
   .justify-end {
     justify-content: flex-end;
+  }
+  .justify-start {
+    justify-content: flex-start;
   }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
