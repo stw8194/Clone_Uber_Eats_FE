@@ -7,7 +7,7 @@ import {
   PendingOrdersSubscription,
 } from "../../gql/graphql";
 
-const EDIT_ORDER_MUTATION = graphql(`
+export const EDIT_ORDER_MUTATION = graphql(`
   mutation EditOrder($editOrderInput: EditOrderInput!) {
     editOrder(input: $editOrderInput) {
       ok

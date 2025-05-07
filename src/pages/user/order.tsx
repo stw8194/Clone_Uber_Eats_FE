@@ -20,7 +20,7 @@ const GET_ORDER_QUERY = graphql(`
   }
 `);
 
-const ORDER_UPDATES_SUBSCRIPTION = graphql(`
+export const ORDER_UPDATES_SUBSCRIPTION = graphql(`
   subscription OrderUpdates($orderUpdatesInput: OrderUpdatesInput!) {
     orderUpdates(input: $orderUpdatesInput) {
       ...OrderParts
