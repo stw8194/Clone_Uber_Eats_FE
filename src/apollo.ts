@@ -10,10 +10,13 @@ import { LOCALSTORAGE_TOKEN } from "./constants";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
+import { ME_QUERY } from "./hooks/useMe";
+import { UserRole } from "./gql/graphql";
 
 const token = localStorage.getItem(LOCALSTORAGE_TOKEN);
 export const isLoggedInVar = makeVar(Boolean(token));
 export const authTokenVar = makeVar(token);
+export const pendingCountVar = makeVar(0);
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
@@ -63,6 +66,26 @@ export const client = new ApolloClient({
           token: {
             read() {
               return authTokenVar();
+            },
+          },
+          isOrderPending: {
+            read(_, { cache }) {
+              const isLoggedIn = isLoggedInVar();
+              if (!isLoggedIn) return false;
+
+              try {
+                const { me } = cache.readQuery({
+                  query: ME_QUERY,
+                }) as { me: { role: UserRole } };
+
+                if (me.role !== UserRole.Owner) {
+                  return false;
+                }
+
+                return pendingCountVar();
+              } catch (e) {
+                return false;
+              }
             },
           },
         },

@@ -250,7 +250,7 @@ export type GetOrderOutput = {
 };
 
 export type GetOrdersInput = {
-  status?: InputMaybe<OrderStatus>;
+  status?: InputMaybe<Array<OrderStatus>>;
 };
 
 export type GetOrdersOutput = {

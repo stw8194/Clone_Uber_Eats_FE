@@ -12,7 +12,7 @@ import { EDIT_ORDER_MUTATION } from "./new_order";
 import { useEffect, useState } from "react";
 import { ORDER_UPDATES_SUBSCRIPTION } from "../../pages/user/order";
 
-const GET_ORDERS_QUERY = graphql(`
+export const GET_ORDERS_QUERY = graphql(`
   query GetOrders($getOrdersInput: GetOrdersInput!) {
     getOrders(input: $getOrdersInput) {
       ok
@@ -40,7 +40,12 @@ export const NewOrders: React.FC<INewOrdersProps> = ({ setIsOpen }) => {
   >(GET_ORDERS_QUERY, {
     variables: {
       getOrdersInput: {
-        status: OrderStatus.Cooking,
+        status: [
+          OrderStatus.Pending,
+          OrderStatus.Cooking,
+          OrderStatus.Cooked,
+          OrderStatus.PickedUp,
+        ],
       },
     },
   });
@@ -107,13 +112,15 @@ export const NewOrders: React.FC<INewOrdersProps> = ({ setIsOpen }) => {
                   <span>Status</span>
                   <span>{order.status}</span>
                 </div>
-                <button
-                  onClick={() => onCookedClick(order.id)}
-                  type="button"
-                  className="w-full h-12 bg-lime-600 text-white mt-2 rounded-xl hover:bg-lime-700"
-                >
-                  Cooked!
-                </button>
+                {order.status === OrderStatus.Cooking && (
+                  <button
+                    onClick={() => onCookedClick(order.id)}
+                    type="button"
+                    className="w-full h-12 bg-lime-600 text-white mt-2 rounded-xl hover:bg-lime-700"
+                  >
+                    Cooked!
+                  </button>
+                )}
               </div>
             </div>
           ))

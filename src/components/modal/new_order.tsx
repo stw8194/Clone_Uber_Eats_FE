@@ -6,6 +6,7 @@ import {
   OrderStatus,
   PendingOrdersSubscription,
 } from "../../gql/graphql";
+import { pendingCountVar } from "../../apollo";
 
 export const EDIT_ORDER_MUTATION = graphql(`
   mutation EditOrder($editOrderInput: EditOrderInput!) {
@@ -37,6 +38,7 @@ export const NewOrder: React.FC<INewOrderProps> = ({ order, setIsOpen }) => {
       },
     });
     setIsOpen(false);
+    pendingCountVar(pendingCountVar() - 1);
   };
 
   return (
