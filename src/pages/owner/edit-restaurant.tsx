@@ -75,7 +75,9 @@ export const EditRestaurant = () => {
     if (ok) {
       const { name, address, categoryName } = getValues();
       setUploading(false);
-      const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });
+      const queryResult = client.readQuery({
+        query: MY_RESTAURANTS_QUERY,
+      });
       if (queryResult && queryResult.myRestaurants.restaurants) {
         client.writeQuery({
           query: MY_RESTAURANTS_QUERY,

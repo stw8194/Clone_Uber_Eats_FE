@@ -1,24 +1,35 @@
-import { useApolloClient, useMutation } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { graphql } from "../../gql";
-import {
-  CreateDishMutation,
-  CreateDishMutationVariables,
-} from "../../gql/graphql";
 import { useForm } from "react-hook-form";
 import { SubmitButton } from "../../components/submit-button";
 import { FormError } from "../../components/form-error";
 import { useHistory, useParams } from "react-router-dom";
-import { useState } from "react";
-import { MY_RESTAURANT_QUERY } from "./my-restaurant";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import {
+  EditDishMutation,
+  EditDishMutationVariables,
+  MyDishQuery,
+} from "../../gql/graphql";
 
-const CREATE_DISH_MUTATION = graphql(`
-  mutation CreateDish($createDishInput: CreateDishInput!) {
-    createDish(input: $createDishInput) {
+const EDIT_DISH_MUTATION = graphql(`
+  mutation EditDish($editDishInput: EditDishInput!) {
+    editDish(input: $editDishInput) {
       ok
       error
-      dishId
+    }
+  }
+`);
+
+const MY_DISH_QUERY = graphql(`
+  query MyDish($myDishInput: MyDishInput!) {
+    myDish(input: $myDishInput) {
+      ok
+      error
+      dish {
+        ...DishParts
+      }
     }
   }
 `);
@@ -34,12 +45,13 @@ interface IFormProps {
   [key: `${number}-choiceExtra`]: string;
 }
 
-interface ICreateDishParams {
-  id: string;
+interface IEditDishParams {
+  restaurantId: string;
+  dishId: string;
 }
 
-export const AddDish = () => {
-  const { id } = useParams<ICreateDishParams>();
+export const EditDish = () => {
+  const { restaurantId, dishId } = useParams<IEditDishParams>();
   const client = useApolloClient();
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -54,53 +66,87 @@ export const AddDish = () => {
     }[]
   >([]);
 
-  const onCompleted = (data: CreateDishMutation) => {
+  const onCompleted = (data: EditDishMutation) => {
     const {
-      createDish: { ok, dishId },
+      editDish: { ok },
     } = data;
-    if (ok && dishId) {
+    if (ok) {
       const { name, price, description } = getValues();
       setUploading(false);
       const queryResult = client.readQuery({
-        query: MY_RESTAURANT_QUERY,
-        variables: { restaurantId: +id },
+        query: MY_DISH_QUERY,
+        variables: {
+          myDishInput: {
+            restaurantId: +restaurantId,
+            dishId: +dishId,
+          },
+        },
       });
-      if (queryResult && queryResult.myRestaurant.restaurant) {
+      if (queryResult && queryResult.myDish.dish) {
         client.writeQuery({
-          query: MY_RESTAURANT_QUERY,
+          query: MY_DISH_QUERY,
           data: {
-            myRestaurant: {
-              ...queryResult?.myRestaurant,
-              restaurant: {
-                ...queryResult.myRestaurant.restaurant,
-                menu: [
-                  {
-                    id: dishId,
-                    name,
-                    price: +price,
-                    photo: imageUrl,
-                    description,
-                    options,
-                    __typename: "Dish",
-                  },
-                  ...queryResult.myRestaurant.restaurant.menu,
-                ],
-                __typename: "Restaurant",
+            myDish: {
+              ...queryResult?.myDish,
+              dish: {
+                id: +dishId,
+                name,
+                price: +price,
+                description,
+                photo: imageUrl,
+                options,
+                __typename: "Dish",
               },
             },
           },
         });
-        history.push(`/restaurants/${id}`);
+        history.push(`/restaurants/${restaurantId}`);
       }
     }
   };
 
-  const [createDishMutation, { data: createDishMutationResults }] = useMutation<
-    CreateDishMutation,
-    CreateDishMutationVariables
-  >(CREATE_DISH_MUTATION, {
+  const [editDishMutation, { data: editDishMutationResults }] = useMutation<
+    EditDishMutation,
+    EditDishMutationVariables
+  >(EDIT_DISH_MUTATION, {
     onCompleted,
   });
+
+  const { data: myDishQueryResults, loading } = useQuery(MY_DISH_QUERY, {
+    variables: {
+      myDishInput: { restaurantId: +restaurantId, dishId: +dishId },
+    },
+    onCompleted: (data: MyDishQuery) => {
+      data.myDish.dish?.options?.map((option, optionIndex) => {
+        const optionKey = Date.now() + optionIndex;
+        setOptionsNumber((current) => [...current, [optionKey, []]]);
+        setValue(`${optionKey}-optionName`, option.name);
+        if (option.choices && option.choices.length !== 0) {
+          option.choices.map((choice, choiceIndex) => {
+            const choiceKey = Date.now() + optionIndex + choiceIndex;
+            setOptionsNumber((current) =>
+              current.map(([id, choices]) =>
+                id === optionKey ? [id, [...choices, choiceKey]] : [id, choices]
+              )
+            );
+            setValue(`${choiceKey}-choiceName`, choice.name);
+            setValue(`${choiceKey}-choiceExtra`, choice.extra + "");
+          });
+        } else {
+          setValue(
+            `${Date.now() + optionIndex}-optionExtra`,
+            option.extra + ""
+          );
+        }
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (myDishQueryResults?.myDish.dish?.photo) {
+      setPreview(myDishQueryResults?.myDish.dish?.photo);
+    }
+  }, [myDishQueryResults]);
 
   const {
     register,
@@ -109,7 +155,20 @@ export const AddDish = () => {
     getValues,
     formState: { errors, isValid },
     handleSubmit,
-  } = useForm<IFormProps>({ mode: "onChange" });
+  } = useForm<IFormProps>({
+    mode: "onChange",
+    defaultValues: {
+      name: "loading",
+      price: "loading",
+    },
+  });
+
+  useEffect(() => {
+    if (myDishQueryResults?.myDish?.dish) {
+      setValue("name", myDishQueryResults.myDish.dish.name);
+      setValue("price", myDishQueryResults.myDish.dish.price + "");
+    }
+  }, [myDishQueryResults, setValue]);
 
   const history = useHistory();
   const onSubmit = async () => {
@@ -118,8 +177,8 @@ export const AddDish = () => {
       let photo = "";
       const { name, price, description, rawFile, ...rest } = getValues();
       const file = rawFile[0];
+      const formBody = new FormData();
       if (file) {
-        const formBody = new FormData();
         formBody.append("file", file);
         const { url, error } = await (
           await fetch("http://localhost:4000/uploads", {
@@ -132,7 +191,17 @@ export const AddDish = () => {
           return;
         }
         photo = url;
+        if (myDishQueryResults?.myDish.dish?.photo) {
+          const [_, encodedFileName] =
+            myDishQueryResults?.myDish.dish?.photo.split("amazonaws.com/");
+          await fetch(`http://localhost:4000/uploads/${encodedFileName}`, {
+            method: "DELETE",
+          });
+        }
         setImageUrl(photo);
+      } else {
+        myDishQueryResults?.myDish.dish?.photo &&
+          setImageUrl(myDishQueryResults?.myDish.dish?.photo);
       }
       const optionObject = optionsNumber.map(([optionId, choices]) => ({
         name: rest[`${optionId}-optionName`],
@@ -143,10 +212,10 @@ export const AddDish = () => {
         })),
       }));
       setOptions(optionObject);
-      createDishMutation({
+      editDishMutation({
         variables: {
-          createDishInput: {
-            restaurantId: +id,
+          editDishInput: {
+            dishId: +dishId,
             name,
             price: +price,
             ...(description && { description }),
@@ -235,6 +304,7 @@ export const AddDish = () => {
         <input
           {...register("description")}
           type="text"
+          defaultValue={myDishQueryResults?.myDish.dish?.description || ""}
           placeholder="Description (optional)"
           className="input"
         />
@@ -382,13 +452,11 @@ export const AddDish = () => {
         </div>
         <SubmitButton
           canClick={isValid}
-          loading={uploading}
-          actionText="Create Dish"
+          loading={uploading && loading}
+          actionText="Edit Dish"
         />
-        {createDishMutationResults?.createDish?.error && (
-          <FormError
-            errorMessage={createDishMutationResults.createDish.error}
-          />
+        {editDishMutationResults?.editDish?.error && (
+          <FormError errorMessage={editDishMutationResults.editDish.error} />
         )}
         {uploadError && <FormError errorMessage={uploadError} />}
       </form>

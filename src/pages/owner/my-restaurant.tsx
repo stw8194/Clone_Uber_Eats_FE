@@ -163,14 +163,18 @@ export const MyRestaurant = () => {
           myRestaurantQueryResults?.myRestaurant.restaurant?.menu.map(
             (menu) => {
               return (
-                <Dish
+                <Link
                   key={menu.id}
-                  id={menu.id}
-                  name={menu.name}
-                  price={menu.price}
-                  description={menu.description}
-                  photo={menu.photo}
-                />
+                  to={`/restaurants/${id}/edit-dish/${menu.id}`}
+                >
+                  <Dish
+                    id={menu.id}
+                    name={menu.name}
+                    price={menu.price}
+                    description={menu.description}
+                    photo={menu.photo}
+                  />
+                </Link>
               );
             }
           )

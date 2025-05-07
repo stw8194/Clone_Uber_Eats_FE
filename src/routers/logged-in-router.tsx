@@ -23,7 +23,8 @@ import { Dashboard } from "../pages/driver/dashboard";
 import { graphql } from "../gql";
 import { useSubscription } from "@apollo/client";
 import { NewOrder } from "../components/modal/new_order";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { EditDish } from "../pages/owner/edit-dish";
 
 const PENDING_ORDERS_SUBSCRIPTION = graphql(`
   subscription PendingOrders {
@@ -81,6 +82,11 @@ const ownerRoutes = [
     path: "/restaurants/:id/add-dish",
     exact: true,
     component: <AddDish />,
+  },
+  {
+    path: "/restaurants/:restaurantId/edit-dish/:dishId",
+    exact: true,
+    component: <EditDish />,
   },
 ];
 
