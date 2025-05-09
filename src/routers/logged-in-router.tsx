@@ -15,6 +15,8 @@ import { EditRestaurant } from "../pages/owner/edit-restaurant";
 import { AddDish } from "../pages/owner/add-dish";
 import { Order } from "../pages/user/order";
 import {
+  CookedOrdersSubscription,
+  CookedOrdersSubscriptionVariables,
   GetOrdersQuery,
   GetOrdersQueryVariables,
   OrderStatus,
@@ -34,6 +36,14 @@ import { GET_ORDERS_QUERY } from "../components/modal/new_orders";
 const PENDING_ORDERS_SUBSCRIPTION = graphql(`
   subscription PendingOrders {
     pendingOrders {
+      ...OrderParts
+    }
+  }
+`);
+
+const COOKED_ORDERS_SUBSCRIPTION = graphql(`
+  subscription CookedOrders {
+    cookedOrders {
       ...OrderParts
     }
   }
@@ -142,12 +152,25 @@ export const LoggedInRouter = () => {
   useEffect(() => {
     pendingCountVar(getOrdersQueryResults?.getOrders.orders?.length);
   }, [getOrdersQueryResults]);
+
   useEffect(() => {
     if (pendingOrdersSubscriptionResults) {
       setIsOpen(true);
       pendingCountVar(pendingCountVar() + 1);
     }
   }, [pendingOrdersSubscriptionResults]);
+
+  const { data: cookedOrdersSubscriptionResults } = useSubscription<
+    CookedOrdersSubscription,
+    CookedOrdersSubscriptionVariables
+  >(COOKED_ORDERS_SUBSCRIPTION, {
+    skip: data?.me.role !== UserRole.Delivery,
+  });
+  useEffect(() => {
+    if (cookedOrdersSubscriptionResults) {
+      setIsOpen(true);
+    }
+  }, [cookedOrdersSubscriptionResults]);
 
   if (!data || loading || error) {
     return (
@@ -175,7 +198,7 @@ export const LoggedInRouter = () => {
                 isOpen && (
                   <NewOrder
                     setIsOpen={setIsOpen}
-                    order={pendingOrdersSubscriptionResults}
+                    unSortedOrder={pendingOrdersSubscriptionResults}
                   />
                 )}
             </Route>
@@ -184,6 +207,14 @@ export const LoggedInRouter = () => {
           driverRoutes.map((route) => (
             <Route key={route.path} path={route.path} exact={route.exact}>
               {route.component}
+              {data.me.role === UserRole.Delivery &&
+                cookedOrdersSubscriptionResults &&
+                isOpen && (
+                  <NewOrder
+                    setIsOpen={setIsOpen}
+                    unSortedOrder={cookedOrdersSubscriptionResults}
+                  />
+                )}
             </Route>
           ))}
         {commonRoutes.map((route) => (

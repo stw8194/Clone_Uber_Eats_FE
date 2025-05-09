@@ -14,11 +14,11 @@ import { GET_ORDERS_QUERY } from "./new_orders";
 import { pendingCountVar } from "../../apollo";
 
 interface IPendingOrdersProps {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPendingOrdersOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const PendingOrders = forwardRef<HTMLDivElement, IPendingOrdersProps>(
-  ({ setIsOpen }, ref) => {
+  ({ setIsPendingOrdersOpen }, ref) => {
     const [currentOrderId, setCurrentOrderId] = useState<number>();
     const [editOrderMutaion] = useMutation<
       EditOrderMutation,
@@ -69,7 +69,7 @@ export const PendingOrders = forwardRef<HTMLDivElement, IPendingOrdersProps>(
           },
         },
       });
-      setIsOpen(false);
+      setIsPendingOrdersOpen(false);
       pendingCountVar(pendingCountVar() - 1);
     };
 

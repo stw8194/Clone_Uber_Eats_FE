@@ -6,17 +6,20 @@ import {
   split,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { LOCALSTORAGE_TOKEN } from "./constants";
+import { IS_DRIVER_GOT_ORDER, LOCALSTORAGE_TOKEN } from "./constants";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { ME_QUERY } from "./hooks/useMe";
-import { UserRole } from "./gql/graphql";
 
 const token = localStorage.getItem(LOCALSTORAGE_TOKEN);
+const isDriverGotOrder = localStorage.getItem(IS_DRIVER_GOT_ORDER);
 export const isLoggedInVar = makeVar(Boolean(token));
 export const authTokenVar = makeVar(token);
 export const pendingCountVar = makeVar(0);
+export const isDriverGotOrderVar = makeVar<number | null>(
+  isDriverGotOrder ? +isDriverGotOrder : null
+);
+export const isDriverCloseToDestinationVar = makeVar(false);
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
@@ -66,26 +69,6 @@ export const client = new ApolloClient({
           token: {
             read() {
               return authTokenVar();
-            },
-          },
-          isOrderPending: {
-            read(_, { cache }) {
-              const isLoggedIn = isLoggedInVar();
-              if (!isLoggedIn) return false;
-
-              try {
-                const { me } = cache.readQuery({
-                  query: ME_QUERY,
-                }) as { me: { role: UserRole } };
-
-                if (me.role !== UserRole.Owner) {
-                  return false;
-                }
-
-                return pendingCountVar();
-              } catch (e) {
-                return false;
-              }
             },
           },
         },
