@@ -1,4 +1,4 @@
-import no_restuarant from "../../images/no_restuarant.svg";
+import no_restuarant from "../../images/logo.svg";
 import { useLazyQuery } from "@apollo/client";
 import { graphql } from "../../gql";
 import { useEffect, useState } from "react";

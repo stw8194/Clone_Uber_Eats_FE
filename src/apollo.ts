@@ -6,10 +6,7 @@ import {
   split,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import {
-  LOCALSTORAGE_CLIENT_ADDRESS_ID,
-  LOCALSTORAGE_TOKEN,
-} from "./constants";
+import { LOCALSTORAGE_TOKEN } from "./constants";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";

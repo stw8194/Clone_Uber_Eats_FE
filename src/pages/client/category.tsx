@@ -1,4 +1,4 @@
-import no_restuarant from "../../images/no_restuarant.svg";
+import no_restuarant from "../../images/logo.svg";
 import { useParams } from "react-router-dom";
 import { graphql } from "../../gql";
 import { useQuery } from "@apollo/client";

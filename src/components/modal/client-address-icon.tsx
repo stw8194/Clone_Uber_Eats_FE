@@ -171,15 +171,20 @@ export const ClientAddressIcon = forwardRef<
       (results) => {
         if (results) {
           const { lat, lng } = results[0].geometry.location;
-          createClientAddressMutation({
-            variables: {
-              createClientAddressInput: {
-                lat: lat(),
-                lng: lng(),
-                address: data.roadAddressEnglish,
+          if (
+            clientAddressesQueryResults?.clientAddresses.addresses &&
+            clientAddressesQueryResults.clientAddresses.addresses.length <= 5
+          ) {
+            createClientAddressMutation({
+              variables: {
+                createClientAddressInput: {
+                  lat: lat(),
+                  lng: lng(),
+                  address: data.roadAddressEnglish,
+                },
               },
-            },
-          });
+            });
+          }
         }
       }
     );
@@ -283,7 +288,8 @@ export const ClientAddressIcon = forwardRef<
               );
             }
           )}
-        {!isPostCodeOpen && (
+        {!isPostCodeOpen &&
+        clientAddressesQueryResults?.clientAddresses.addresses?.length !== 5 ? (
           <button
             className="bg-lime-600 hover:bg-lime-700 p-2 mt-2 rounded-lg cursor-pointer"
             onClick={() => {
@@ -292,6 +298,8 @@ export const ClientAddressIcon = forwardRef<
           >
             Add address
           </button>
+        ) : (
+          <div className="p-2 mt-2">Up to 5 addresses can be registered</div>
         )}
         {isLoaded && isPostCodeOpen && (
           <div>
