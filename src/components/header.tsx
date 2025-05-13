@@ -1,32 +1,30 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo from "../images/logo.svg";
-import { faBell, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBell,
+  faMapLocationDot,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useMe } from "../hooks/useMe";
 import { useState } from "react";
-import { authTokenVar, isLoggedInVar, pendingCountVar } from "../apollo";
-import { LOCALSTORAGE_TOKEN } from "../constants";
-import { useApolloClient } from "@apollo/client";
+import { pendingCountVar } from "../apollo";
 import { UserRole } from "../gql/graphql";
 import { PendingOrders } from "./modal/pending_orders";
 import { useModalRef } from "../hooks/useModalRef";
+import { UserIcon } from "./modal/user-icon";
+import { ClientAddressIcon } from "./modal/client-address-icon";
 // import { Cart } from "./modal/cart";
 
 export const Header: React.FC = () => {
   const { data } = useMe();
   const [isOpen, setIsOpen] = useState(false);
   const [isPendingOrdersOpen, setIsPendingOrdersOpen] = useState(false);
+  const [isClientAddressOpen, setIsClientAddressOpen] = useState(false);
   // const [isCartOpen, setIsCartOpen] = useState(false);
-  const client = useApolloClient();
   const profileModalRef = useModalRef(setIsOpen);
   const bellModalRef = useModalRef(setIsPendingOrdersOpen);
-
-  const onLogout = () => {
-    localStorage.removeItem(LOCALSTORAGE_TOKEN);
-    authTokenVar(null);
-    isLoggedInVar(false);
-    client.clearStore();
-  };
+  const addressModalRef = useModalRef(setIsClientAddressOpen);
 
   return (
     <>
@@ -35,11 +33,28 @@ export const Header: React.FC = () => {
           <span>Please verify your email.</span>
         </div>
       )}
-      <header className="py-6">
-        <div className="container w-full px-5 mb-6 xl:px-0 flex justify-between items-center">
-          <Link to="/">
-            <img src={logo} alt="Cuber Eats" className="w-24" />
-          </Link>
+      <header className="fixed top-0 left-0 w-full bg-white z-50 shadow-md py-6">
+        <div className="container w-full px-5 my-3 xl:px-0 flex justify-between items-center">
+          <div className="flex items-center space-x-8">
+            <Link to="/">
+              <img src={logo} alt="Cuber Eats" className="w-24" />
+            </Link>
+            {data?.me.role === UserRole.Client && (
+              <div className="inline-block justify-self-start mr-5">
+                <FontAwesomeIcon
+                  icon={faMapLocationDot}
+                  onClick={() => setIsClientAddressOpen((current) => !current)}
+                  className="text-xl cursor-pointer"
+                />
+                {isClientAddressOpen && (
+                  <ClientAddressIcon
+                    ref={addressModalRef}
+                    setIsOpen={setIsClientAddressOpen}
+                  />
+                )}
+              </div>
+            )}
+          </div>
           <div className="items-center">
             <span
               className="relative text-xs"
@@ -87,35 +102,13 @@ export const Header: React.FC = () => {
                 className="text-xl cursor-pointer"
               />
               {isOpen && (
-                <div
-                  ref={profileModalRef}
-                  className="fixed right-0 mt-2 w-40 bg-gray-100 p-4 rounded shadow-xl z-50 origin-top-right transform scale-95 opacity-0 animate-dropdown"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="flex flex-col space-y-2">
-                    <Link to="/edit-profile" onClick={() => setIsOpen(false)}>
-                      <button className="bg-lime-600 text-white px-4 py-2 rounded w-full">
-                        Edit Profile
-                      </button>
-                    </Link>
-                    <Link
-                      to="/"
-                      onClick={() => {
-                        setIsOpen(false);
-                        onLogout();
-                      }}
-                    >
-                      <button className="bg-lime-600 text-white px-4 py-2 rounded w-full">
-                        Log out
-                      </button>
-                    </Link>
-                  </div>
-                </div>
+                <UserIcon ref={profileModalRef} setIsOpen={setIsOpen} />
               )}
             </span>
           </div>
         </div>
       </header>
+      <div className="my-24"></div>
     </>
   );
 };

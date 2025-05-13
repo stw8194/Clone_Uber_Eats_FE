@@ -9,6 +9,12 @@ export const ME_QUERY = graphql(`
       email
       role
       verified
+      selectedAddress {
+        id
+        address
+        lat
+        lng
+      }
     }
   }
 `);

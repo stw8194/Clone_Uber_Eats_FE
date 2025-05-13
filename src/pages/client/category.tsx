@@ -1,3 +1,4 @@
+import no_restuarant from "../../images/logo.svg";
 import { useParams } from "react-router-dom";
 import { graphql } from "../../gql";
 import { useQuery } from "@apollo/client";
@@ -86,12 +87,16 @@ export const Category = () => {
           />
         ))}
       </div>
-      {categoryQueryResults?.category.totalPages && (
+      {categoryQueryResults?.category.totalPages ? (
         <ShowMoreButton
           page={page}
           totalPages={categoryQueryResults.category.totalPages}
           onClick={onClick}
         />
+      ) : (
+        <div className="flex w-full h-full items-center justify-center">
+          <img src={no_restuarant} alt="Empty!" className="w-full mt-48" />
+        </div>
       )}
     </div>
   );

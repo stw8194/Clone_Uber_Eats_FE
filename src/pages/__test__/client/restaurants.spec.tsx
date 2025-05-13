@@ -1,6 +1,9 @@
 import { createMockClient } from "mock-apollo-client";
 import { render, screen, waitFor } from "../../../test-utils";
-import { Restaurants, RESTAURANTS_QUERY } from "../../client/restaurants";
+import {
+  Restaurants,
+  RESTAURANTS_NEARBY_QUERY,
+} from "../../client/restaurants";
 import userEvent from "@testing-library/user-event";
 import { Restaurant } from "../../../components/restaurant";
 import { ShowMoreButton } from "../../../components/showmore-button";
@@ -88,7 +91,10 @@ describe("<Restaurants />", () => {
     const mockedQueryResponse = jest.fn().mockResolvedValue({
       ...restaurantsQueryResults,
     });
-    mockedClient.setRequestHandler(RESTAURANTS_QUERY, mockedQueryResponse);
+    mockedClient.setRequestHandler(
+      RESTAURANTS_NEARBY_QUERY,
+      mockedQueryResponse
+    );
     render(<Restaurants />, { client: mockedClient });
 
     await waitFor(() => {
@@ -101,7 +107,10 @@ describe("<Restaurants />", () => {
     const mockedQueryResponse = jest.fn().mockResolvedValue({
       ...restaurantsQueryResults,
     });
-    mockedClient.setRequestHandler(RESTAURANTS_QUERY, mockedQueryResponse);
+    mockedClient.setRequestHandler(
+      RESTAURANTS_NEARBY_QUERY,
+      mockedQueryResponse
+    );
     render(<Restaurants />, { client: mockedClient });
 
     const search = screen.getByPlaceholderText("Search restaurants...");
@@ -116,7 +125,10 @@ describe("<Restaurants />", () => {
     const mockedQueryResponse = jest.fn().mockResolvedValue({
       ...restaurantsQueryResults,
     });
-    mockedClient.setRequestHandler(RESTAURANTS_QUERY, mockedQueryResponse);
+    mockedClient.setRequestHandler(
+      RESTAURANTS_NEARBY_QUERY,
+      mockedQueryResponse
+    );
     render(<Restaurants />, { client: mockedClient });
 
     const search = screen.getByPlaceholderText("Search restaurants...");
@@ -134,7 +146,10 @@ describe("<Restaurants />", () => {
     const mockedQueryResponse = jest.fn().mockResolvedValue({
       ...restaurantsQueryResults,
     });
-    mockedClient.setRequestHandler(RESTAURANTS_QUERY, mockedQueryResponse);
+    mockedClient.setRequestHandler(
+      RESTAURANTS_NEARBY_QUERY,
+      mockedQueryResponse
+    );
     render(<Restaurants />, { client: mockedClient });
 
     await waitFor(() => {
@@ -170,7 +185,10 @@ describe("<Restaurants />", () => {
     const mockedQueryResponse = jest.fn().mockResolvedValue({
       ...restaurantsQueryResults,
     });
-    mockedClient.setRequestHandler(RESTAURANTS_QUERY, mockedQueryResponse);
+    mockedClient.setRequestHandler(
+      RESTAURANTS_NEARBY_QUERY,
+      mockedQueryResponse
+    );
     render(<Restaurants />, { client: mockedClient });
 
     await waitFor(() => {

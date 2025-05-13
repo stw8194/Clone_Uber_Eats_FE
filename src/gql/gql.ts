@@ -14,17 +14,23 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  mutation CreateClientAddress(\n    $createClientAddressInput: CreateClientAddressInput!\n  ) {\n    createClientAddress(input: $createClientAddressInput) {\n      ok\n      error\n      addressId\n      address\n      lat\n      lng\n    }\n  }\n": typeof types.CreateClientAddressDocument,
+    "\n  query ClientAddresses {\n    clientAddresses {\n      ok\n      error\n      addresses {\n        id\n        address\n        lat\n        lng\n      }\n    }\n  }\n": typeof types.ClientAddressesDocument,
+    "\n  mutation ChangeClientAddress(\n    $changeSelectedClientAddressInput: ChangeSelectedClientAddressInput!\n  ) {\n    changeSelectedClientAddress(input: $changeSelectedClientAddressInput) {\n      ok\n      error\n    }\n  }\n": typeof types.ChangeClientAddressDocument,
+    "\n  mutation DeleteClientAddress(\n    $deleteClientAddressInput: DeleteClientAddressInput!\n  ) {\n    deleteClientAddress(input: $deleteClientAddressInput) {\n      ok\n      error\n    }\n  }\n": typeof types.DeleteClientAddressDocument,
+    "\n            fragment SelectedUser on User {\n              selectedAddress {\n                id\n              }\n            }\n          ": typeof types.SelectedUserFragmentDoc,
+    "\n              fragment SelectedUser on User {\n                selectedAddress {\n                  id\n                }\n              }\n            ": typeof types.SelectedUserFragmentDoc,
     "\n  mutation EditOrder($editOrderInput: EditOrderInput!) {\n    editOrder(input: $editOrderInput) {\n      ok\n      error\n    }\n  }\n": typeof types.EditOrderDocument,
     "\n  query GetOrders($getOrdersInput: GetOrdersInput!) {\n    getOrders(input: $getOrdersInput) {\n      ok\n      error\n      orders {\n        ...OrderParts\n      }\n    }\n  }\n": typeof types.GetOrdersDocument,
-    "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n": typeof types.RestaurantPartsFragmentDoc,
+    "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    address\n    lat\n    lng\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n": typeof types.RestaurantPartsFragmentDoc,
     "\n  fragment CategoryParts on Category {\n    id\n    name\n    coverImg\n    slug\n    restaurantCount\n  }\n": typeof types.CategoryPartsFragmentDoc,
     "\n  fragment DishParts on Dish {\n    id\n    name\n    price\n    photo\n    description\n    options {\n      name\n      extra\n      choices {\n        name\n        extra\n      }\n    }\n  }\n": typeof types.DishPartsFragmentDoc,
     "\n  fragment OrderParts on Order {\n    id\n    status\n    total\n    driver {\n      email\n    }\n    customer {\n      email\n    }\n    restaurant {\n      name\n    }\n  }\n": typeof types.OrderPartsFragmentDoc,
-    "\n  query Me {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n": typeof types.MeDocument,
+    "\n  query Me {\n    me {\n      id\n      email\n      role\n      verified\n      selectedAddress {\n        id\n        address\n        lat\n        lng\n      }\n    }\n  }\n": typeof types.MeDocument,
     "\n  query Category($categoryInput: CategoryInput!) {\n    category(input: $categoryInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n      category {\n        ...CategoryParts\n      }\n    }\n  }\n": typeof types.CategoryDocument,
     "\n  query Restaurant($restaurantId: Float!) {\n    restaurant(restaurantId: $restaurantId) {\n      restaurant {\n        ...RestaurantParts\n        menu {\n          ...DishParts\n        }\n      }\n    }\n  }\n": typeof types.RestaurantDocument,
     "\n  mutation CreateOrder($createOrderInput: CreateOrderInput!) {\n    createOrder(input: $createOrderInput) {\n      ok\n      error\n      orderId\n    }\n  }\n": typeof types.CreateOrderDocument,
-    "\n  query RestaurantsPage($restaurantsInput: RestaurantsInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    restaurants(input: $restaurantsInput) {\n      totalPages\n      totalResults\n      results {\n        ...RestaurantParts\n      }\n    }\n  }\n": typeof types.RestaurantsPageDocument,
+    "\n  query RestaurantsNearbyPages(\n    $restaurantsNearbyInput: RestaurantsNearbyInput!\n  ) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    restaurantsNearby(input: $restaurantsNearbyInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n": typeof types.RestaurantsNearbyPagesDocument,
     "\n  query SearchRestaurant($searchRestaurantInput: SearchRestaurantInput!) {\n    searchRestaurant(input: $searchRestaurantInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n": typeof types.SearchRestaurantDocument,
     "\n  mutation CreateAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": typeof types.CreateAccountDocument,
     "\n  mutation Login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": typeof types.LoginDocument,
@@ -45,17 +51,23 @@ type Documents = {
     "\n  subscription PendingOrders {\n    pendingOrders {\n      ...OrderParts\n    }\n  }\n": typeof types.PendingOrdersDocument,
 };
 const documents: Documents = {
+    "\n  mutation CreateClientAddress(\n    $createClientAddressInput: CreateClientAddressInput!\n  ) {\n    createClientAddress(input: $createClientAddressInput) {\n      ok\n      error\n      addressId\n      address\n      lat\n      lng\n    }\n  }\n": types.CreateClientAddressDocument,
+    "\n  query ClientAddresses {\n    clientAddresses {\n      ok\n      error\n      addresses {\n        id\n        address\n        lat\n        lng\n      }\n    }\n  }\n": types.ClientAddressesDocument,
+    "\n  mutation ChangeClientAddress(\n    $changeSelectedClientAddressInput: ChangeSelectedClientAddressInput!\n  ) {\n    changeSelectedClientAddress(input: $changeSelectedClientAddressInput) {\n      ok\n      error\n    }\n  }\n": types.ChangeClientAddressDocument,
+    "\n  mutation DeleteClientAddress(\n    $deleteClientAddressInput: DeleteClientAddressInput!\n  ) {\n    deleteClientAddress(input: $deleteClientAddressInput) {\n      ok\n      error\n    }\n  }\n": types.DeleteClientAddressDocument,
+    "\n            fragment SelectedUser on User {\n              selectedAddress {\n                id\n              }\n            }\n          ": types.SelectedUserFragmentDoc,
+    "\n              fragment SelectedUser on User {\n                selectedAddress {\n                  id\n                }\n              }\n            ": types.SelectedUserFragmentDoc,
     "\n  mutation EditOrder($editOrderInput: EditOrderInput!) {\n    editOrder(input: $editOrderInput) {\n      ok\n      error\n    }\n  }\n": types.EditOrderDocument,
     "\n  query GetOrders($getOrdersInput: GetOrdersInput!) {\n    getOrders(input: $getOrdersInput) {\n      ok\n      error\n      orders {\n        ...OrderParts\n      }\n    }\n  }\n": types.GetOrdersDocument,
-    "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n": types.RestaurantPartsFragmentDoc,
+    "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    address\n    lat\n    lng\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n": types.RestaurantPartsFragmentDoc,
     "\n  fragment CategoryParts on Category {\n    id\n    name\n    coverImg\n    slug\n    restaurantCount\n  }\n": types.CategoryPartsFragmentDoc,
     "\n  fragment DishParts on Dish {\n    id\n    name\n    price\n    photo\n    description\n    options {\n      name\n      extra\n      choices {\n        name\n        extra\n      }\n    }\n  }\n": types.DishPartsFragmentDoc,
     "\n  fragment OrderParts on Order {\n    id\n    status\n    total\n    driver {\n      email\n    }\n    customer {\n      email\n    }\n    restaurant {\n      name\n    }\n  }\n": types.OrderPartsFragmentDoc,
-    "\n  query Me {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n": types.MeDocument,
+    "\n  query Me {\n    me {\n      id\n      email\n      role\n      verified\n      selectedAddress {\n        id\n        address\n        lat\n        lng\n      }\n    }\n  }\n": types.MeDocument,
     "\n  query Category($categoryInput: CategoryInput!) {\n    category(input: $categoryInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n      category {\n        ...CategoryParts\n      }\n    }\n  }\n": types.CategoryDocument,
     "\n  query Restaurant($restaurantId: Float!) {\n    restaurant(restaurantId: $restaurantId) {\n      restaurant {\n        ...RestaurantParts\n        menu {\n          ...DishParts\n        }\n      }\n    }\n  }\n": types.RestaurantDocument,
     "\n  mutation CreateOrder($createOrderInput: CreateOrderInput!) {\n    createOrder(input: $createOrderInput) {\n      ok\n      error\n      orderId\n    }\n  }\n": types.CreateOrderDocument,
-    "\n  query RestaurantsPage($restaurantsInput: RestaurantsInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    restaurants(input: $restaurantsInput) {\n      totalPages\n      totalResults\n      results {\n        ...RestaurantParts\n      }\n    }\n  }\n": types.RestaurantsPageDocument,
+    "\n  query RestaurantsNearbyPages(\n    $restaurantsNearbyInput: RestaurantsNearbyInput!\n  ) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    restaurantsNearby(input: $restaurantsNearbyInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n": types.RestaurantsNearbyPagesDocument,
     "\n  query SearchRestaurant($searchRestaurantInput: SearchRestaurantInput!) {\n    searchRestaurant(input: $searchRestaurantInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n": types.SearchRestaurantDocument,
     "\n  mutation CreateAccount($createAccountInput: CreateAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
     "\n  mutation Login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
@@ -93,6 +105,30 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation CreateClientAddress(\n    $createClientAddressInput: CreateClientAddressInput!\n  ) {\n    createClientAddress(input: $createClientAddressInput) {\n      ok\n      error\n      addressId\n      address\n      lat\n      lng\n    }\n  }\n"): (typeof documents)["\n  mutation CreateClientAddress(\n    $createClientAddressInput: CreateClientAddressInput!\n  ) {\n    createClientAddress(input: $createClientAddressInput) {\n      ok\n      error\n      addressId\n      address\n      lat\n      lng\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query ClientAddresses {\n    clientAddresses {\n      ok\n      error\n      addresses {\n        id\n        address\n        lat\n        lng\n      }\n    }\n  }\n"): (typeof documents)["\n  query ClientAddresses {\n    clientAddresses {\n      ok\n      error\n      addresses {\n        id\n        address\n        lat\n        lng\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation ChangeClientAddress(\n    $changeSelectedClientAddressInput: ChangeSelectedClientAddressInput!\n  ) {\n    changeSelectedClientAddress(input: $changeSelectedClientAddressInput) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation ChangeClientAddress(\n    $changeSelectedClientAddressInput: ChangeSelectedClientAddressInput!\n  ) {\n    changeSelectedClientAddress(input: $changeSelectedClientAddressInput) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DeleteClientAddress(\n    $deleteClientAddressInput: DeleteClientAddressInput!\n  ) {\n    deleteClientAddress(input: $deleteClientAddressInput) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation DeleteClientAddress(\n    $deleteClientAddressInput: DeleteClientAddressInput!\n  ) {\n    deleteClientAddress(input: $deleteClientAddressInput) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n            fragment SelectedUser on User {\n              selectedAddress {\n                id\n              }\n            }\n          "): (typeof documents)["\n            fragment SelectedUser on User {\n              selectedAddress {\n                id\n              }\n            }\n          "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n              fragment SelectedUser on User {\n                selectedAddress {\n                  id\n                }\n              }\n            "): (typeof documents)["\n              fragment SelectedUser on User {\n                selectedAddress {\n                  id\n                }\n              }\n            "];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation EditOrder($editOrderInput: EditOrderInput!) {\n    editOrder(input: $editOrderInput) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation EditOrder($editOrderInput: EditOrderInput!) {\n    editOrder(input: $editOrderInput) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -101,7 +137,7 @@ export function graphql(source: "\n  query GetOrders($getOrdersInput: GetOrdersI
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n"): (typeof documents)["\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n"];
+export function graphql(source: "\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    address\n    lat\n    lng\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n"): (typeof documents)["\n  fragment RestaurantParts on Restaurant {\n    id\n    name\n    coverImg\n    address\n    lat\n    lng\n    category {\n      name\n    }\n    address\n    isPromoted\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -117,7 +153,7 @@ export function graphql(source: "\n  fragment OrderParts on Order {\n    id\n   
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Me {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n"): (typeof documents)["\n  query Me {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n"];
+export function graphql(source: "\n  query Me {\n    me {\n      id\n      email\n      role\n      verified\n      selectedAddress {\n        id\n        address\n        lat\n        lng\n      }\n    }\n  }\n"): (typeof documents)["\n  query Me {\n    me {\n      id\n      email\n      role\n      verified\n      selectedAddress {\n        id\n        address\n        lat\n        lng\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -133,7 +169,7 @@ export function graphql(source: "\n  mutation CreateOrder($createOrderInput: Cre
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query RestaurantsPage($restaurantsInput: RestaurantsInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    restaurants(input: $restaurantsInput) {\n      totalPages\n      totalResults\n      results {\n        ...RestaurantParts\n      }\n    }\n  }\n"): (typeof documents)["\n  query RestaurantsPage($restaurantsInput: RestaurantsInput!) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    restaurants(input: $restaurantsInput) {\n      totalPages\n      totalResults\n      results {\n        ...RestaurantParts\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query RestaurantsNearbyPages(\n    $restaurantsNearbyInput: RestaurantsNearbyInput!\n  ) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    restaurantsNearby(input: $restaurantsNearbyInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n"): (typeof documents)["\n  query RestaurantsNearbyPages(\n    $restaurantsNearbyInput: RestaurantsNearbyInput!\n  ) {\n    allCategories {\n      ok\n      error\n      categories {\n        ...CategoryParts\n      }\n    }\n\n    restaurantsNearby(input: $restaurantsNearbyInput) {\n      totalPages\n      totalResults\n      restaurants {\n        ...RestaurantParts\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

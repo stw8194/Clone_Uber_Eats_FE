@@ -74,7 +74,7 @@ export const MenuOrder = forwardRef<HTMLDivElement, IMenuOrderProps>(
                         <ToggleGroupItem
                           value={option.name}
                           aria-label={option.name}
-                          className="p-2 rounded-full hover:bg-gray-200 data-[state=on]:text-green-600"
+                          className="p-2 rounded-full hover:bg-gray-200 data-[state=on]:text-lime-600"
                         >
                           <FontAwesomeIcon icon={faCheckCircle} />
                         </ToggleGroupItem>
