@@ -7,7 +7,6 @@ interface IAddRestaurantAddressProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   restaurantCoords: IPosition | null;
   setRestaurantCoords: React.Dispatch<React.SetStateAction<IPosition | null>>;
-  restaurantAddress: string;
   setRestaurantAddress: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -27,13 +26,7 @@ export const AddRestaurantAddress = forwardRef<
   IAddRestaurantAddressProps
 >(
   (
-    {
-      setIsOpen,
-      restaurantCoords,
-      setRestaurantCoords,
-      restaurantAddress,
-      setRestaurantAddress,
-    },
+    { setIsOpen, restaurantCoords, setRestaurantCoords, setRestaurantAddress },
     ref
   ) => {
     const { isLoaded } = useJsApiLoader({

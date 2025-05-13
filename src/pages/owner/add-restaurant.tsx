@@ -76,7 +76,11 @@ export const AddRestaurant = () => {
       const { name, address, categoryName } = getValues();
       setUploading(false);
       const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });
-      if (queryResult && queryResult.myRestaurants.restaurants) {
+      if (
+        queryResult &&
+        restaurantCoords &&
+        queryResult.myRestaurants.restaurants
+      ) {
         client.writeQuery({
           query: MY_RESTAURANTS_QUERY,
           data: {
@@ -87,6 +91,8 @@ export const AddRestaurant = () => {
                   id: restaurantId,
                   name,
                   address,
+                  lat: restaurantCoords?.lat,
+                  lng: restaurantCoords?.lng,
                   category: {
                     name: categoryName,
                     __typename: "Category",
@@ -206,7 +212,6 @@ export const AddRestaurant = () => {
             setIsOpen={setIsOpen}
             restaurantCoords={restaurantCoords}
             setRestaurantCoords={setRestaurantCoords}
-            restaurantAddress={restaurantAddress}
             setRestaurantAddress={setRestaurantAddress}
           />
         )}

@@ -5,6 +5,9 @@ export const RESTAURANT_FRAGMENT = graphql(`
     id
     name
     coverImg
+    address
+    lat
+    lng
     category {
       name
     }

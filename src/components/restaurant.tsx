@@ -24,7 +24,6 @@ export const Restaurant: React.FC<IRestaurantProps> = ({
           <h3 className="font-medium cursor-pointer truncate overflow-hidden">
             {name.split(" - ")[0]}
           </h3>
-          <FontAwesomeIcon className="opacity-30" icon={faHeart} color="gray" />
         </div>
       </div>
     </Link>

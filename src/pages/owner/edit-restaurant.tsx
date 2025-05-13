@@ -90,6 +90,9 @@ export const EditRestaurant = () => {
                   id: +id,
                   name,
                   address,
+                  //임시
+                  lat: 1,
+                  lng: 1,
                   category: {
                     name: categoryName,
                     __typename: "Category",
@@ -232,7 +235,6 @@ export const EditRestaurant = () => {
               setIsOpen={setIsOpen}
               restaurantCoords={restaurantCoords}
               setRestaurantCoords={setRestaurantCoords}
-              restaurantAddress={restaurantAddress}
               setRestaurantAddress={setRestaurantAddress}
             />
           )}
