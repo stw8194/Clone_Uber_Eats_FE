@@ -8,7 +8,9 @@ import {
 import { Link } from "react-router-dom";
 import { useMe } from "../hooks/useMe";
 import { useState } from "react";
-import { pendingCountVar } from "../apollo";
+import { authTokenVar, isLoggedInVar, pendingCountVar } from "../apollo";
+import { LOCALSTORAGE_TOKEN } from "../constants";
+import { useApolloClient, useReactiveVar } from "@apollo/client";
 import { UserRole } from "../gql/graphql";
 import { PendingOrders } from "./modal/pending_orders";
 import { useModalRef } from "../hooks/useModalRef";
@@ -24,6 +26,7 @@ export const Header: React.FC = () => {
   // const [isCartOpen, setIsCartOpen] = useState(false);
   const profileModalRef = useModalRef(setIsOpen);
   const bellModalRef = useModalRef(setIsPendingOrdersOpen);
+  const pendingCount = useReactiveVar(pendingCountVar);
   const addressModalRef = useModalRef(setIsClientAddressOpen);
 
   return (
@@ -77,7 +80,7 @@ export const Header: React.FC = () => {
               {data?.me.role === UserRole.Owner && (
                 <div
                   onClick={() => {
-                    if (pendingCountVar()) setIsPendingOrdersOpen(true);
+                    if (pendingCount) setIsPendingOrdersOpen(true);
                   }}
                   className="relative inline-block mr-5"
                 >
@@ -85,13 +88,13 @@ export const Header: React.FC = () => {
                     icon={faBell}
                     className="text-xl cursor-pointer"
                   />
-                  {!!pendingCountVar() && (
+                  {!!pendingCount && (
                     <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full w-2.5 h-2.5"></span>
                   )}
                   {isPendingOrdersOpen && (
                     <PendingOrders
                       ref={bellModalRef}
-                      setIsOpen={setIsPendingOrdersOpen}
+                      setIsPendingOrdersOpen={setIsPendingOrdersOpen}
                     />
                   )}
                 </div>

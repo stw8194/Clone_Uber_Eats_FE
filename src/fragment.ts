@@ -57,6 +57,9 @@ export const ORDER_FRAGMENT = graphql(`
     }
     restaurant {
       name
+      address
+      lat
+      lng
     }
   }
 `);
