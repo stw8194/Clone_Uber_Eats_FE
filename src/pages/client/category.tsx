@@ -1,4 +1,4 @@
-import no_restuarant from "../../images/logo.svg";
+import no_restuarant from "../../images/no_restaurant.svg";
 import { useParams } from "react-router-dom";
 import { graphql } from "../../gql";
 import { useQuery } from "@apollo/client";
@@ -49,7 +49,7 @@ export const Category = () => {
     }
   };
 
-  const { data: categoryQueryResults } = useQuery<
+  const { data: categoryQueryResults, loading } = useQuery<
     CategoryQuery,
     CategoryQueryVariables
   >(CATEGORY_QUERY, {
@@ -95,7 +95,11 @@ export const Category = () => {
         />
       ) : (
         <div className="flex w-full h-full items-center justify-center">
-          <img src={no_restuarant} alt="Empty!" className="w-full mt-48" />
+          <img
+            src={no_restuarant}
+            alt="No Restaurants Available in this Category!"
+            className="w-1/2 "
+          />
         </div>
       )}
     </div>

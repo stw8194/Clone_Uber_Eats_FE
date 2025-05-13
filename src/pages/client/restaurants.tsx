@@ -1,4 +1,4 @@
-import no_restuarant from "../../images/logo.svg";
+import no_restuarant from "../../images/no_restaurant.svg";
 import { useLazyQuery } from "@apollo/client";
 import { graphql } from "../../gql";
 import { useEffect, useState } from "react";
@@ -164,7 +164,11 @@ export const Restaurants = () => {
             </>
           ) : (
             <div className="flex w-full h-full items-center justify-center">
-              <img src={no_restuarant} alt="Empty!" className="w-full mt-48" />
+              <img
+                src={no_restuarant}
+                alt="No Restaurants Available NearBy!"
+                className="w-1/2"
+              />
             </div>
           )}
         </div>
